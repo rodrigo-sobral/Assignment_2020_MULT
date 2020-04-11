@@ -28,7 +28,7 @@ function init(ctx) {
 	var nLoad = 0
 	var totLoad = TOT_HEROES 
 	var heroes = new Array(totLoad);
-
+	console.log("criar bonecos")
 	var yin = new Image()
 	var sasha= new Image()
 	yin.id="yin"
@@ -88,8 +88,8 @@ function detectKeyboard(heroes, cw, ch) {
 	window.addEventListener("keydown", keyHandler)
 	window.addEventListener("keyup", keyHandler)
 
-	heroes[0].walking(cw, ch)
-	heroes[1].walking(cw, ch)
+	heroes[ID_SASHA].walking(cw, ch)
+	heroes[ID_YIN].walking(cw, ch)
 }
 
 /**
@@ -101,16 +101,16 @@ function keyUpDownHandler(ev, heroes, cw, ch) {
 		if (ev.code=="Escape") console.log(ev.code) // menu pause
 		// MOVE YIN
 		else if (ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") 
-			heroes[1].detect_movement(ev.code, cw, ch)
+			heroes[ID_YIN].detect_movement(ev.code, cw, ch)
 		// MOVE SASHA
 		else if (ev.code=="KeyW" || ev.code=="KeyS" || ev.code=="KeyA" || ev.code=="KeyD") 
-			heroes[0].detect_movement(ev.code, cw, ch)
+			heroes[ID_SASHA].detect_movement(ev.code, cw, ch)
 	} else if (ev.type=="keyup") {
 		// PARA YIN
 		if (ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") 
-			heroes[1].stop(ev.code, cw, ch)
+			heroes[ID_YIN].stop(ev.code, cw, ch)
 		// PARA SASHA
 		else if (ev.code=="KeyW" || ev.code=="KeyS" || ev.code=="KeyA" || ev.code=="KeyD") 
-			heroes[0].stop(ev.code, cw, ch)
+			heroes[ID_SASHA].stop(ev.code, cw, ch)
 	}
 }
