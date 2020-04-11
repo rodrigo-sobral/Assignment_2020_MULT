@@ -5,6 +5,8 @@
 }());
 
 const TOT_HEROES=2
+const ID_YIN=1
+const ID_SASHA=0
 
 function main() {
 	var canvas = document.getElementById("canvas")
@@ -41,9 +43,9 @@ function init(ctx) {
 		var nw = img.naturalWidth
 		var nh = img.naturalHeight
 		if (img.id=="yin") 
-			heroes[nLoad]= new Personagem(50, 50, nw, nh, 2, img)
+			heroes[ID_YIN]= new Personagem(50, 50, nw, nh, 2, img)
 		else if (img.id=="sasha") 
-			heroes[nLoad] = new Personagem(100, 100, nw, nh, 2, img)
+			heroes[ID_SASHA] = new Personagem(100, 100, nw, nh, 2, img)
 
 		nLoad++	
 		if (nLoad == totLoad) {
