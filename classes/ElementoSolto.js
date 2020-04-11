@@ -1,10 +1,8 @@
 "use strict" 
 
 class ElementoSolto extends ElementoFixo {
-    constructor(posx, posy, width, height, img) {
-        super(posx, posy, width, height, img)
-    }
-
-    mover() {
+    constructor(x, y, width, height, speed, img) {
+        super(x, y, width, height, img)
+        this.speed=speed
     }
 }
