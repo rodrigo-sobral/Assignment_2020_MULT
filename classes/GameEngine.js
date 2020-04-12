@@ -33,8 +33,8 @@ function init(ctx) {
 	var sasha= new Image()
 	yin.id="yin"
 	sasha.id="sasha"
-	yin.src = "./resources/yin_sprite.png"
-	sasha.src = "./resources/Sasha_sprite.png"
+	yin.src = "../resources/yin_sprite.png"
+	sasha.src = "../resources/Sasha_sprite.png"
 	yin.addEventListener("load", imgLoadedHandler)
 	sasha.addEventListener("load", imgLoadedHandler)
 	
