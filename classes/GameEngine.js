@@ -7,27 +7,32 @@
 const TOT_HEROES=2
 const ID_YIN=1
 const ID_SASHA=0
+const BLOCK_SIZE=40
 
 function main() {
 	var canvas = document.getElementById("canvas")
 	var ctx = canvas.getContext("2d")
 	var heroes
+	var blocos
 
-	init(ctx)
+	initAllComponents(ctx)
 	canvas.addEventListener("initend", initEndHandler)
 
 	function initEndHandler(ev) {
-		heroes = ev.heroes
-		drawHeroes(ctx, heroes)
-		animLoop(ctx, heroes)
+		heroes= ev.heroes
+		blocos= ev.blocos
+		drawSprites(ctx, blocos)
+		drawSprites(ctx, heroes)
+		animLoop(ctx, heroes, blocos)
 	}
 
 }
 
-function init(ctx) {
+function initAllComponents(ctx) {
 	var nLoad = 0
 	var totLoad = TOT_HEROES 
-	var heroes = new Array(totLoad);
+	var heroes = new Array(totLoad)
+	var blocos = new Array(1)
 
 	var yin = new Image()
 	var sasha= new Image()
@@ -37,48 +42,57 @@ function init(ctx) {
 	sasha.src = "../resources/Sasha_sprite_front1.png"
 	yin.addEventListener("load", imgLoadedHandler)
 	sasha.addEventListener("load", imgLoadedHandler)
+
+	var bloco= new Image()
+	bloco.id="bloco"
+	bloco.src="../resources/lab_borders5.png"
+	bloco.addEventListener("load", imgLoadedHandler)
 	
 	function imgLoadedHandler(ev) {
 		var img = ev.target
-		var nw = img.naturalWidth
-		var nh = img.naturalHeight
-		if (img.id=="yin") 
-			heroes[ID_YIN]= new Personagem(50, 50, nw, nh, 2, img)
-		else if (img.id=="sasha") 
-			heroes[ID_SASHA] = new Personagem(100, 100, nw, nh, 2, img)
-
+		if (img.id=="yin")  heroes[ID_YIN]= new Personagem(50, 50, BLOCK_SIZE, BLOCK_SIZE, 2, img)
+		else if (img.id=="sasha")  heroes[ID_SASHA] = new Personagem(100, 100, BLOCK_SIZE, BLOCK_SIZE, 2, img)
+		else blocos[0]= new ElementoFixo(100, 50, BLOCK_SIZE, BLOCK_SIZE, img)
 		nLoad++	
-		if (nLoad == totLoad) {
+		if (nLoad == totLoad+1) {
 			var ev2 = new Event("initend");
-			ev2.heroes = heroes;
+			ev2.heroes= heroes
+			ev2.blocos= blocos
 			ctx.canvas.dispatchEvent(ev2);
 		}
 	}
 }
 
-function animLoop(ctx, heroes) {
-	var al = function() { animLoop(ctx, heroes) }
+function drawSprites(ctx, sprites) {
+	for (let i=0; i < sprites.length; i++) sprites[i].draw(ctx);
+}
+
+function animLoop(ctx, heroes, blocos) {
+	var al = function() { animLoop(ctx, heroes, blocos) }
 	window.requestAnimationFrame(al)
 	
-	render(ctx, heroes)
+	render(ctx, heroes, blocos)
 }
 
 //resedenho, actualizações, ...
-function render(ctx, heroes) {
+function render(ctx, heroes, blocos) {
 	let ch= ctx.canvas.height
 	let cw= ctx.canvas.width
 
 	detectKeyboard(heroes, cw, ch)
-	heroes[ID_SASHA].walking(heroes[ID_YIN], cw, ch)
-		heroes[ID_YIN].walking(heroes[ID_SASHA], cw, ch)
+
+	heroes[ID_SASHA].detectIntersection(heroes[ID_YIN])
+	heroes[ID_YIN].detectIntersection(heroes[ID_SASHA])
+	heroes[ID_SASHA].detectIntersection(blocos[0])
+	heroes[ID_YIN].detectIntersection(blocos[0])
+
+	heroes[ID_SASHA].walking(cw, ch)
+	heroes[ID_YIN].walking(cw, ch)
 	
 
 	ctx.clearRect(0, 0, cw, ch)
-	drawHeroes(ctx, heroes)
-}
-
-function drawHeroes(ctx, heroes) {
-	for (let i=0; i < heroes.length; i++) heroes[i].draw(ctx);
+	drawSprites(ctx, heroes)
+	drawSprites(ctx, blocos)
 }
 
 function detectKeyboard(heroes, cw, ch) {
