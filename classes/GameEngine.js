@@ -69,7 +69,10 @@ function render(ctx, heroes) {
 	let cw= ctx.canvas.width
 
 	detectKeyboard(heroes, cw, ch)
+	heroes[ID_SASHA].walking(heroes[ID_YIN], cw, ch)
+	heroes[ID_YIN].walking(heroes[ID_SASHA], cw, ch)
 	
+
 	ctx.clearRect(0, 0, cw, ch)
 	drawHeroes(ctx, heroes)
 }
@@ -79,35 +82,34 @@ function drawHeroes(ctx, heroes) {
 }
 
 function detectKeyboard(heroes, cw, ch) {
-	function keyHandler(ev) { keyUpDownHandler(ev, heroes, cw,ch) }
+	function keyHandler(ev) { keyUpDownHandler(ev, heroes) }
 
 	//	keyboard
 	window.addEventListener("keydown", keyHandler)
 	window.addEventListener("keyup", keyHandler)
 
-	heroes[ID_SASHA].walking(cw, ch)
-	heroes[ID_YIN].walking(cw, ch)
 }
 
 /**
  * @param {Event} ev 
  * @param {Personagem} heroes
  */
-function keyUpDownHandler(ev, heroes, cw, ch) {
+function keyUpDownHandler(ev, heroes) {
 	if (ev.type=="keydown") {
 		if (ev.code=="Escape") console.log(ev.code) // menu pause
 		// MOVE YIN
 		else if (ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") 
-			heroes[ID_YIN].detect_movement(ev.code, cw, ch)
+			heroes[ID_YIN].detect_movement(ev.code)
 		// MOVE SASHA
 		else if (ev.code=="KeyW" || ev.code=="KeyS" || ev.code=="KeyA" || ev.code=="KeyD") 
-			heroes[ID_SASHA].detect_movement(ev.code, cw, ch)
+			heroes[ID_SASHA].detect_movement(ev.code)
 	} else if (ev.type=="keyup") {
 		// PARA YIN
 		if (ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") 
-			heroes[ID_YIN].stop(ev.code, cw, ch)
+			heroes[ID_YIN].stop(ev.code)
 		// PARA SASHA
 		else if (ev.code=="KeyW" || ev.code=="KeyS" || ev.code=="KeyA" || ev.code=="KeyD") 
-			heroes[ID_SASHA].stop(ev.code, cw, ch)
+			heroes[ID_SASHA].stop(ev.code)
 	}
 }
+
