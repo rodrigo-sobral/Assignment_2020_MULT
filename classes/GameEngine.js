@@ -33,8 +33,8 @@ function init(ctx) {
 	var sasha= new Image()
 	yin.id="yin"
 	sasha.id="sasha"
-	yin.src = "../resources/yin_sprite.png"
-	sasha.src = "../resources/Sasha_sprite.png"
+	yin.src = "../resources/yin_sprite_front1.png"
+	sasha.src = "../resources/Sasha_sprite_front1.png"
 	yin.addEventListener("load", imgLoadedHandler)
 	sasha.addEventListener("load", imgLoadedHandler)
 	
@@ -70,7 +70,7 @@ function render(ctx, heroes) {
 
 	detectKeyboard(heroes, cw, ch)
 	heroes[ID_SASHA].walking(heroes[ID_YIN], cw, ch)
-	heroes[ID_YIN].walking(heroes[ID_SASHA], cw, ch)
+		heroes[ID_YIN].walking(heroes[ID_SASHA], cw, ch)
 	
 
 	ctx.clearRect(0, 0, cw, ch)
