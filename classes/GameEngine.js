@@ -28,7 +28,7 @@ function init(ctx) {
 	var nLoad = 0
 	var totLoad = TOT_HEROES 
 	var heroes = new Array(totLoad);
-	console.log("criar bonecos")
+
 	var yin = new Image()
 	var sasha= new Image()
 	yin.id="yin"
@@ -58,13 +58,13 @@ function init(ctx) {
 
 function animLoop(ctx, heroes) {
 	var al = function() { animLoop(ctx, heroes) }
-	var reqID = window.requestAnimationFrame(al)
+	window.requestAnimationFrame(al)
 	
-	render(ctx, heroes, reqID)
+	render(ctx, heroes)
 }
 
 //resedenho, actualizações, ...
-function render(ctx, heroes, reqID) {
+function render(ctx, heroes) {
 	let ch= ctx.canvas.height
 	let cw= ctx.canvas.width
 
@@ -76,9 +76,6 @@ function render(ctx, heroes, reqID) {
 
 function drawHeroes(ctx, heroes) {
 	for (let i=0; i < heroes.length; i++) heroes[i].draw(ctx);
-}
-function clearHeroes(ctx, heroes) {
-	for (let i=0; i < heroes.length; i++) heroes[i].clear(ctx);
 }
 
 function detectKeyboard(heroes, cw, ch) {
