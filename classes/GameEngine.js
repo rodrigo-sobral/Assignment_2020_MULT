@@ -45,7 +45,7 @@ function initAllComponents(ctx) {
 
 	var bloco= new Image()
 	bloco.id="bloco"
-	bloco.src="../resources/lab_borders5.png"
+	bloco.src="../resources/Game_slot_format.png"
 	bloco.addEventListener("load", imgLoadedHandler)
 	
 	function imgLoadedHandler(ev) {
