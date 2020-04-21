@@ -7,11 +7,12 @@ class ElementoFixo {
 		this.y = y
 		this.width = width
 		this.height = height
-		this.img = img		
-		this.imgData = this.getimagedata()				
+		this.img = img	
+		this.imgData
+		if (img!=undefined) this.imgData= this.getImageData()				
 	}
 
-	getimagedata(){
+	getImageData(){
 		var canvas = document.createElement("canvas")
 		canvas.width = Math.round(this.width)
 		canvas.height = Math.round(this.height)
