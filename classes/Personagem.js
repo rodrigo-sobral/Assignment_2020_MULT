@@ -13,10 +13,6 @@ class Personagem extends Inimigo {
      * @param {String} code 
      */
     detect_movement(code) {
-        this.keyStatus.stopUp=false
-        this.keyStatus.stopRight=false
-        this.keyStatus.stopLeft=false
-        this.keyStatus.stopDown=false
         if (this.keyStatus.walkUp==false && (code=="ArrowUp" || code=="KeyW")) {
             this.keyStatus.walkUp=true
         } else if (this.keyStatus.walkDown==false && (code=="ArrowDown" || code=="KeyS")) {
@@ -37,17 +33,17 @@ class Personagem extends Inimigo {
             this.keyStatus.walkUp=false
             this.keyStatus.stopUp=true
         } else if (this.keyStatus.walkDown==true && (code=="ArrowDown" || code=="KeyS")) {
-            this.img=this.walking_sprites[this.ID_DOWN]
+            this.img=this.stopped_sprites[this.ID_DOWN]
             this.imgData=this.getImageData()
             this.keyStatus.walkDown=false
             this.keyStatus.stopDown=true
         } else if (this.keyStatus.walkLeft==true && (code=="ArrowLeft" || code=="KeyA")) {
-            this.img=this.walking_sprites[this.ID_LEFT]
+            this.img=this.stopped_sprites[this.ID_LEFT]
             this.imgData=this.getImageData()
             this.keyStatus.walkLeft=false
             this.keyStatus.stopLeft=true
         } else if (this.keyStatus.walkRight==true && (code=="ArrowRight" || code=="KeyD")) {
-            this.img=this.walking_sprites[this.ID_RIGHT]
+            this.img=this.stopped_sprites[this.ID_RIGHT]
             this.imgData=this.getImageData()
             this.keyStatus.walkRight=false
             this.keyStatus.stopRight=true

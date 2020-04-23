@@ -6,8 +6,8 @@
 
 const TOT_HEROES=2
 const ID_SASHA=0, ID_YIN=1
-const BLOCK_SIZE=40
-const BULLET_WIDTH=7, BULLET_HEIGHT=10, BULLET_SPEED=4
+const BLOCK_SIZE=50
+const BULLET_WIDTH=10, BULLET_HEIGHT=13, BULLET_SPEED=4
 
 function main() {
 	var canvas = document.getElementById("canvas")
@@ -93,8 +93,8 @@ function initAllComponents(ctx) {
 		} else if (img.id.includes("yin")==true  && img.src.includes("gif")) {
 			heroes[ID_YIN].walking_sprites.push(img)
 		} else if (img.id.includes("bullet")==true) {
-			heroes[ID_SASHA].bullets.push(img)
-			heroes[ID_YIN].bullets.push(img)
+			heroes[ID_SASHA].bullets.push(new ElementoSolto(0, 0, BULLET_WIDTH, BULLET_HEIGHT, BULLET_SPEED, img))
+			heroes[ID_YIN].bullets.push(new ElementoSolto(0, 0, BULLET_WIDTH, BULLET_HEIGHT, BULLET_SPEED, img))
 		} else if (img.id=="bloco") blocos[0]= new ElementoFixo(100, 50, BLOCK_SIZE, BLOCK_SIZE, img)
 
 		nLoad++	
@@ -135,7 +135,7 @@ function renderGame(ctx, heroes, blocos) {
 	ctx.clearRect(0, 0, cw, ch)
 	drawSprites(ctx, heroes)
 	drawSprites(ctx, blocos)
-	}
+}
 
 function detectKeyboard(heroes, blocos, ctx) {
 	function keyHandler(ev) { keyUpDownHandler(ev, heroes, blocos, ctx) }
@@ -154,9 +154,9 @@ function keyUpDownHandler(ev, heroes, blocos, ctx) {
 	if (ev.type=="keydown") {
 		if (ev.code=="Escape") console.log(ev.code) // menu pause
 		// SHOOT YIN
-		else if (ev.code=="Space") heroes[ID_YIN].shoot(ctx, heroes[ID_SASHA], blocos)
+		else if (ev.code=="Space") heroes[ID_YIN].shoot(ctx, heroes[ID_SASHA], blocos[0])
 		// SHOOT SASHA
-		else if (ev.code=="ShiftLeft") heroes[ID_SASHA].shoot(ctx, heroes[ID_YIN], blocos)
+		else if (ev.code=="ShiftLeft") heroes[ID_SASHA].shoot(ctx, heroes[ID_YIN], blocos[0])
 		// MOVE YIN
 		else if (ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") 
 			heroes[ID_YIN].detect_movement(ev.code)

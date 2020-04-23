@@ -26,6 +26,7 @@ class ElementoFixo {
 
 	draw(ctx) { ctx.drawImage(this.img, this.x, this.y, this.width, this.height) }
 	clear(ctx) { ctx.clearRect(this.x, this.y, this.width, this.height) }
+	clearPrevious(ctx, x1, y1) { ctx.clearRect(x1, y1, this.width, this.height) }
 
 	//-------------------------------------------------------------
     //--- Intersections
