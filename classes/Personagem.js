@@ -28,7 +28,7 @@ class Personagem extends Inimigo {
      */
     stop(code) {
         if (this.keyStatus.walkUp==true && (code=="ArrowUp" || code=="KeyW")) {
-            this.img=this.walking_sprites[this.ID_UP]
+            this.img=this.stopped_sprites[this.ID_UP]
             this.imgData=this.getImageData()
             this.keyStatus.walkUp=false
             this.keyStatus.stopUp=true
