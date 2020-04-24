@@ -1,6 +1,15 @@
 "use strict" 
 
 class ElementoSolto extends ElementoFixo {
+    WALKING_SPEED=20
+    COUNTER_LEFT= 0
+    COUNTER_RIGHT= 0
+    COUNTER_UP= 0
+    COUNTER_DOWN= 0
+    flag_left=false
+    flag_right=false
+    flag_up=false
+    flag_down=false
     constructor(x, y, width, height, speed, img) {
         super(x, y, width, height, img)
         this.keyStatus = {
@@ -13,23 +22,15 @@ class ElementoSolto extends ElementoFixo {
 
     moving(cw, ch) {
         if (this.keyStatus.walkLeft==true) {
-            if (this.isPersonagemOrInimigo()==true)  { this.img=this.walking_sprites[this.ID_LEFT]; this.updateImg() }
-            
             if(this.x>0) this.x-=this.speed
             else this.x=0
         } if (this.keyStatus.walkRight==true) {
-            if (this.isPersonagemOrInimigo()==true)  { this.img=this.walking_sprites[this.ID_RIGHT]; this.updateImg() }
-            
             if(this.x+this.width<cw) this.x+=this.speed
             else this.x=cw-this.width
         } if (this.keyStatus.walkUp==true) {
-            if (this.isPersonagemOrInimigo()==true)  { this.img=this.walking_sprites[this.ID_UP]; this.updateImg() }
-            
             if(this.y>0) this.y-=this.speed
             else this.y=0
         } if (this.keyStatus.walkDown==true) {
-            if (this.isPersonagemOrInimigo()==true)  { this.img=this.walking_sprites[this.ID_DOWN]; this.updateImg() }
-            
             if(this.y+this.height<ch) this.y+=this.speed
             else this.y=ch-this.height
         }
@@ -39,15 +40,13 @@ class ElementoSolto extends ElementoFixo {
         if (Inimigo.prototype.isPrototypeOf(this)==true || Personagem.prototype.isPrototypeOf(this)==true) return true
         else return false
     }
-    updateImg() {
-        this.imgData=this.getImageData()
-        this.resetStop()
-    }
 
-    resetStop() {
+    updateImgData() {
+        this.imgData=this.getImageData()
         this.keyStatus.stopLeft=false
         this.keyStatus.stopRight=false
         this.keyStatus.stopUp=false
         this.keyStatus.stopDown=false
     }
+
 }
