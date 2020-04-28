@@ -1,7 +1,7 @@
 "use strict" 
 
 class ElementoSolto extends ElementoFixo {
-    WALKING_SPEED=20
+    WALKING_SPEED=15
     COUNTER_LEFT= 0
     COUNTER_RIGHT= 0
     COUNTER_UP= 0

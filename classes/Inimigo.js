@@ -2,13 +2,14 @@
 
 class Inimigo extends BlocoDestrutivel {
     ID_LEFT=0; ID_RIGHT=1; ID_UP=2; ID_DOWN=3
+    BULLET_WIDTH=10; BULLET_HEIGHT=13; BULLET_SPEED=4
     constructor(x, y, width, height, speed) {
         super(x, y, width, height, speed)
         this.gun=true
         this.walking_sprites= [ [], [], [], [] ]
         this.stopped_sprites= new Array()
         this.bullets= new Array()
-        this.activated_bullet
+        this.activated_bullets= new Array()
     }
 
     moving(cw, ch) {
@@ -71,57 +72,47 @@ class Inimigo extends BlocoDestrutivel {
         }
     }
 
-    defineBullet(ctx, hero, blocos) {
+    defineBullet() {
+        let shooted_bullet
         //if (this.arma==true) {
             if (this.keyStatus.walkUp==true && this.keyStatus.walkLeft==true) {
-                this.searchDirection("UpLeft")
-                this.activated_bullet.x=this.x-this.activated_bullet.width+10
-                this.activated_bullet.y=this.y+this.height/2
-                this.activated_bullet.keyStatus.walkUp=true
-                this.activated_bullet.keyStatus.walkLeft=true
+                shooted_bullet= new ElementoSolto(this.x-this.BULLET_WIDTH+10, this.y+this.height/2, this.BULLET_WIDTH, this.BULLET_HEIGHT, this.BULLET_SPEED, this.searchDirection("UpLeft"))
+                shooted_bullet.keyStatus.walkUp=true
+                shooted_bullet.keyStatus.walkLeft=true
             } else if (this.keyStatus.walkDown==true && this.keyStatus.walkLeft==true) {
-                this.searchDirection("DownLeft")
-                this.activated_bullet.x=this.x-this.activated_bullet.width+10
-                this.activated_bullet.y=this.y+this.height/2
-                this.activated_bullet.keyStatus.walkDown=true
-                this.activated_bullet.keyStatus.walkLeft=true
+                shooted_bullet= new ElementoSolto(this.x-this.BULLET_WIDTH+10, this.y+this.height/2, this.BULLET_WIDTH, this.BULLET_HEIGHT, this.BULLET_SPEED, this.searchDirection("DownLeft"))
+                shooted_bullet.keyStatus.walkDown=true
+                shooted_bullet.keyStatus.walkLeft=true
             } else if (this.keyStatus.walkUp==true && this.keyStatus.walkRight==true) {
-                this.searchDirection("UpRight")
-                this.activated_bullet.x=this.x+this.width-10
-                this.activated_bullet.y=this.y+this.height/2
-                this.activated_bullet.keyStatus.walkUp=true
-                this.activated_bullet.keyStatus.walkRight=true
+                shooted_bullet= new ElementoSolto(this.x+this.width-10, this.y+this.height/2, this.BULLET_WIDTH, this.BULLET_HEIGHT, this.BULLET_SPEED, this.searchDirection("UpRight"))
+                shooted_bullet.keyStatus.walkUp=true
+                shooted_bullet.keyStatus.walkRight=true
             } else if (this.keyStatus.walkDown==true && this.keyStatus.walkRight==true) {
-                this.searchDirection("DownRight")
-                this.activated_bullet.x=this.x+this.width-10
-                this.activated_bullet.y=this.y+this.height/2
-                this.activated_bullet.keyStatus.walkDown=true
-                this.activated_bullet.keyStatus.walkRight=true
+                shooted_bullet= new ElementoSolto(this.x+this.width-10, this.y+this.height/2, this.BULLET_WIDTH, this.BULLET_HEIGHT, this.BULLET_SPEED, this.searchDirection("DownRight"))
+                shooted_bullet.keyStatus.walkDown=true
+                shooted_bullet.keyStatus.walkRight=true
             } else if (this.keyStatus.walkLeft==true || this.keyStatus.stopLeft==true) {
-                this.searchDirection("Left")
-                this.activated_bullet.x=this.x-this.activated_bullet.width
-                this.activated_bullet.y=this.y+this.height/2
-                this.activated_bullet.keyStatus.walkLeft=true
+                shooted_bullet= new ElementoSolto(this.x-this.BULLET_WIDTH, this.y+this.height/2, this.BULLET_WIDTH, this.BULLET_HEIGHT, this.BULLET_SPEED, this.searchDirection("Left"))              
+                shooted_bullet.keyStatus.walkLeft=true
             } else if (this.keyStatus.walkRight==true || this.keyStatus.stopRight==true) {
-                this.searchDirection("Right")
-                this.activated_bullet.x=this.x+this.width
-                this.activated_bullet.y=this.y+this.height/2
-                this.activated_bullet.keyStatus.walkRight=true
+                shooted_bullet= new ElementoSolto(this.x+this.width, this.y+this.height/2, this.BULLET_WIDTH, this.BULLET_HEIGHT, this.BULLET_SPEED, this.searchDirection("Right"))
+                shooted_bullet.keyStatus.walkRight=true
             } else if (this.keyStatus.walkDown==true || this.keyStatus.stopDown==true){
-                this.searchDirection("Down")
-                this.activated_bullet.x=this.x+this.width/2
-                this.activated_bullet.y=this.y+this.height
-                this.activated_bullet.keyStatus.walkDown=true
+                shooted_bullet= new ElementoSolto(this.x+this.width/2, this.y+this.height/2, this.BULLET_WIDTH, this.BULLET_HEIGHT, this.BULLET_SPEED, this.searchDirection("Down"))
+                shooted_bullet.keyStatus.walkDown=true
             } else if (this.keyStatus.walkUp==true || this.keyStatus.stopUp==true) {
-                this.searchDirection("Up")
-                this.activated_bullet.x=this.x+this.width/2
-                this.activated_bullet.y=this.y-this.activated_bullet.height
-                this.activated_bullet.keyStatus.walkUp=true
+                shooted_bullet= new ElementoSolto(this.x+this.width/2, this.y-this.BULLET_HEIGHT, this.BULLET_WIDTH, this.BULLET_HEIGHT, this.BULLET_SPEED, this.searchDirection("Up"))
+                shooted_bullet.keyStatus.walkUp=true
             }
+            for (let i = 0; i < this.activated_bullets.length; i++) {
+                if (this.activated_bullets[i].x==shooted_bullet.x && this.activated_bullets[i].y==shooted_bullet.y) return
+            }
+            this.activated_bullets.push(shooted_bullet)
+            this.keyStatus.firing=true
     }   
     searchDirection(direction) {
         for (let i = 0; i < this.bullets.length; i++) {
-            if (this.bullets[i].img.id.includes(direction)) { this.activated_bullet=this.bullets[i]; break }
+            if (this.bullets[i].id.includes(direction)) { return this.bullets[i] }
         }
     } 
 }

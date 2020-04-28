@@ -7,7 +7,6 @@
 const TOT_HEROES=2
 const ID_SASHA=0, ID_YIN=1
 const BLOCK_SIZE=50
-const BULLET_WIDTH=10, BULLET_HEIGHT=13, BULLET_SPEED=4
 
 function main() {
 	var canvas = document.getElementById("canvas")
@@ -42,6 +41,7 @@ function initAllComponents(ctx) {
 	//			blocos + bullets + posiçoes paradas + posiçoes caminhando
 	var totLoad= blocos.length + 8 + 8 + 16
 
+	// LOAD STOPPED HEROES
 	for (let i=0; i<4; i++) {
 		sashaSprite= new Image()
 		yinSprite= new Image()
@@ -53,6 +53,7 @@ function initAllComponents(ctx) {
 		sashaSprite.addEventListener("load", imgLoadedHandler)		
 	}
 
+	// LOAD WALKING HEROES
 	for (let i = 0; i < 4; i++) {
 		yinSprite= new Image()
 		sashaSprite= new Image()
@@ -72,6 +73,7 @@ function initAllComponents(ctx) {
 		auxSasha.addEventListener("load", imgLoadedHandler)
 	}
 
+	//	LOAD BULLETS
 	for (let i = 0, j=0; i < 8; j++, i++) {
 		bullet_sprite= new Image()
 		if (i==4 || i==6) j=0
@@ -108,8 +110,8 @@ function initAllComponents(ctx) {
 			else if (img.id.includes(ids[2])) heroes[ID_YIN].walking_sprites[2].push(img)
 			else if (img.id.includes(ids[3])) heroes[ID_YIN].walking_sprites[3].push(img)
 		} else if (img.id.includes("bullet")==true) {
-			heroes[ID_SASHA].bullets.push(new ElementoSolto(0, 0, BULLET_WIDTH, BULLET_HEIGHT, BULLET_SPEED, img))
-			heroes[ID_YIN].bullets.push(new ElementoSolto(0, 0, BULLET_WIDTH, BULLET_HEIGHT, BULLET_SPEED, img))
+			heroes[ID_SASHA].bullets.push(img)
+			heroes[ID_YIN].bullets.push(img)
 		} else if (img.id=="bloco") blocos[0]= new ElementoFixo(100, 50, BLOCK_SIZE, BLOCK_SIZE, img)
 
 		nLoad++	
@@ -136,7 +138,6 @@ function animLoop(ctx, heroes, blocos) {
 function renderGame(ctx, heroes, blocos) {
 	let ch= ctx.canvas.height
 	let cw= ctx.canvas.width
-	var hitten_sasha_bullet=false, hitten_yin_bullet=false
 
 	detectKeyboard(heroes, blocos, ctx)
 
@@ -144,37 +145,34 @@ function renderGame(ctx, heroes, blocos) {
 	heroes[ID_YIN].detectIntersection(heroes[ID_SASHA])
 	heroes[ID_SASHA].detectIntersection(blocos[0])
 	heroes[ID_YIN].detectIntersection(blocos[0])
-	
+	renderBullets(ctx, heroes[ID_SASHA], heroes[ID_YIN], blocos[0])
+	renderBullets(ctx, heroes[ID_YIN], heroes[ID_SASHA], blocos[0])
+
 	heroes[ID_SASHA].moving(cw, ch)
 	heroes[ID_YIN].moving(cw, ch)
 	
 	ctx.clearRect(0, 0, cw, ch)
 	drawSprites(ctx, heroes)
 	drawSprites(ctx, blocos)
-	if (renderBullets(ctx, heroes[ID_SASHA], blocos[0])==true) {
-		drawSprites(ctx, [heroes[ID_SASHA].activated_bullet])
-	} if (renderBullets(ctx, heroes[ID_YIN], blocos[0])==true) {
-		drawSprites(ctx, [heroes[ID_YIN].activated_bullet])
-	}
+	drawSprites(ctx, heroes[ID_SASHA].activated_bullets)
+	drawSprites(ctx, heroes[ID_YIN].activated_bullets)
 }
 
-function renderBullets(ctx, hero, blocos) {
+function renderBullets(ctx, hero, hero2, blocos) {
 	// 	false	- if bullet touches in something or is not initialized
 	// 	true 	- if is everyhing okay and shall draw it
-	let bullet= hero.activated_bullet
+	let bullets= hero.activated_bullets
 	let cw=ctx.canvas.width, ch=ctx.canvas.height
-	if (bullet==undefined) return false
-	if (bullet.intersectionWith(hero)==false && bullet.intersectionWith(blocos)==false) {
-		if (bullet.x>=0 && bullet.x<=cw && bullet.y>=0 && bullet.y<=ch) {
-			hero.activated_bullet.moving(cw, ch)
-			return true
+	if (bullets.length==0) return false
+	for (let i=0; i<bullets.length; i++) {
+		if (hero2.intersectionWith(bullets[i])==false && blocos.intersectionWith(bullets[i])==false) {
+			if (bullets[i].x>0 && bullets[i].x+bullets[i].width<cw && bullets[i].y>0 && bullets[i].y+bullets[i].height<ch) bullets[i].moving(cw, ch)
+			else {
+				hero.activated_bullets.splice(i,1)
+			}
 		} else {
-			hero.activated_bullet=undefined
-			return false
+			hero.activated_bullets.splice(i,1)
 		}
-	} else {
-		hero.activated_bullet=undefined
-		return false
 	}
 }
 
@@ -194,8 +192,10 @@ function detectKeyboard(heroes, blocos, ctx) {
 function keyUpDownHandler(ev, heroes, blocos, ctx) {
 	if (ev.type=="keydown") {
 		if (ev.code=="Escape") console.log(ev.code) // menu pause
-		// SHOOT YIN OR SASHA
-		else if (ev.code=="Space" || ev.code=="ShiftLeft") shootingSystem(ev.code, ctx, heroes, blocos)
+		// SHOOT YIN
+		else if (ev.code=="Space" && heroes[ID_YIN].keyStatus.firing==false) heroes[ID_YIN].defineBullet()
+		// SHOOT SASHA
+		else if (ev.code=="ShiftLeft" && heroes[ID_SASHA].keyStatus.firing==false) heroes[ID_SASHA].defineBullet()
 		// MOVE YIN
 		else if (ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") 
 			heroes[ID_YIN].detect_movement(ev.code)
@@ -203,16 +203,15 @@ function keyUpDownHandler(ev, heroes, blocos, ctx) {
 		else if (ev.code=="KeyW" || ev.code=="KeyS" || ev.code=="KeyA" || ev.code=="KeyD") 
 			heroes[ID_SASHA].detect_movement(ev.code)
 	} else if (ev.type=="keyup") {
+		// STOP SHOOTING YIN
+		if (ev.code=="Space" && heroes[ID_YIN].keyStatus.firing==true) heroes[ID_YIN].keyStatus.firing=false 
+		// STOP SHOOTING SASHA
+		else if (ev.code=="ShiftLeft" && heroes[ID_SASHA].keyStatus.firing==true) heroes[ID_SASHA].keyStatus.firing=false 
 		// PARA YIN
-		if (ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") 
+		else if (ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") 
 			heroes[ID_YIN].stop(ev.code)
 		// PARA SASHA
 		else if (ev.code=="KeyW" || ev.code=="KeyS" || ev.code=="KeyA" || ev.code=="KeyD") 
 			heroes[ID_SASHA].stop(ev.code)
 	}
-}
-
-function shootingSystem(button, ctx, heroes, blocos) {
-	if (button=="ShiftLeft") heroes[ID_SASHA].defineBullet(ctx, heroes[ID_YIN], blocos[0])
-	else heroes[ID_YIN].defineBullet(ctx, heroes[ID_SASHA], blocos[0])
 }
