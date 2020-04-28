@@ -193,7 +193,7 @@ function keyUpDownHandler(ev, heroes, blocos, ctx) {
 	if (ev.type=="keydown") {
 		if (ev.code=="Escape") console.log(ev.code) // menu pause
 		// SHOOT YIN
-		else if (ev.code=="Space" && heroes[ID_YIN].keyStatus.firing==false) heroes[ID_YIN].defineBullet()
+		else if (ev.code=="ShiftRight" && heroes[ID_YIN].keyStatus.firing==false) heroes[ID_YIN].defineBullet()
 		// SHOOT SASHA
 		else if (ev.code=="ShiftLeft" && heroes[ID_SASHA].keyStatus.firing==false) heroes[ID_SASHA].defineBullet()
 		// MOVE YIN
@@ -204,7 +204,7 @@ function keyUpDownHandler(ev, heroes, blocos, ctx) {
 			heroes[ID_SASHA].detect_movement(ev.code)
 	} else if (ev.type=="keyup") {
 		// STOP SHOOTING YIN
-		if (ev.code=="Space" && heroes[ID_YIN].keyStatus.firing==true) heroes[ID_YIN].keyStatus.firing=false 
+		if (ev.code=="ShiftRight" && heroes[ID_YIN].keyStatus.firing==true) heroes[ID_YIN].keyStatus.firing=false 
 		// STOP SHOOTING SASHA
 		else if (ev.code=="ShiftLeft" && heroes[ID_SASHA].keyStatus.firing==true) heroes[ID_SASHA].keyStatus.firing=false 
 		// PARA YIN
