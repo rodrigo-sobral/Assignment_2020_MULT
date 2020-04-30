@@ -18,12 +18,6 @@ class ElementoSolto extends ElementoFixo {
             firing:false
         }
         this.speed=speed
-        this.sound_bullet= this.initSound()
-    }
-    initSound() {
-        var audio= new Audio("../resources/sounds/glock_sound.mp3")
-        audio.id="sound_bullet"
-        return audio
     }
 
     moving(cw, ch) {

@@ -109,7 +109,6 @@ class Inimigo extends BlocoDestrutivel {
             }
             this.activated_bullets.push(shooted_bullet)
             this.keyStatus.firing=true
-            shooted_bullet.sound_bullet.play()
     }   
     searchDirection(direction) {
         for (let i = 0; i < this.bullets.length; i++) {
