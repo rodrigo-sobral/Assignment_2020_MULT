@@ -35,7 +35,7 @@ function main() {
     backBtn.addEventListener("mouseenter",playSound)
 }
 
-function backMainMenu() { location.replace("../../html/index.html") }
+function backMainMenu() { location.replace("../../index.html") }
 function playSound() {
     var sound= new Audio("../../resources/sounds/buttonSwitchSound.mp3")
     sound.play()

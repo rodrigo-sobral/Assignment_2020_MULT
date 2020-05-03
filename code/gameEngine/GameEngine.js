@@ -196,7 +196,7 @@ function detectKeyboard(heroes, blocks, ctx) {
  */
 function keyUpDownHandler(ev, heroes, blocks, ctx) {
 	if (ev.type=="keydown") {
-		if (ev.code=="Escape") location.replace("../../html/menu_newgame.html")
+		if (ev.code=="Escape") location.replace("../../index.html")
 		// SHOOT YIN
 		else if (ev.code=="ShiftRight" && heroes[ID_YIN].keyStatus.firing==false) heroes[ID_YIN].defineBullet()
 		// SHOOT SASHA

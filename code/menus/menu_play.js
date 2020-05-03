@@ -20,7 +20,7 @@ function main() {
 
 }
 
-function backMainMenu() { location.replace("../../html/index.html") }
+function backMainMenu() { location.replace("../../index.html") }
 function newGameMenu() { location.replace("../../html/menu_newgame.html") }
 
 function playSound() {
