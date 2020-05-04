@@ -1,35 +1,41 @@
+#soundOn1, #soundOff1, #soundOn2, #soundOff2, #configImg, button, div, h1, p, iframe { position: absolute; }
 iframe{
-    position: absolute;
     width: 1250px;
     height: 550px;
     background-image:url("../resources/images/menus/background_lab.png") ;
     background-size: 45%;
 }
 
-h1, p {
-    position: absolute; 
-    font-family: arcadeFont;
-}
-h1 {
-    font-size: 70px;
-    left: 5%;
-}
+h1, p { font-family: arcadeFont; }
+h1 { font-size: 70px; left: 5%; }
 p {
     font-size: x-large;
     top: 40%;
     left: 5%;
 }
 
+div {
+    top: 40%;
+    left: 4%;
+    background-color: rgb(146, 146, 146);
+    width: 44%;
+    height: 25%;
+    opacity: 0.8;
+    border-bottom: 6px inset rgba(107, 107, 107, 0.5);
+	border-left: 6px inset rgba(107,107,107,.5);
+	border-right: 6px inset rgba(255,255,255,.5);
+	border-top: 6px inset rgba(255,255,255,.5);
+    border-radius: 20px;
+}
+
 #configImg {
-    position: absolute;
-    left: 65%;
-    top: 35%;
-    width: 20%;
+    left: 37%;
+    top: 7.5%;
+    width: 9%;
 }
 
 button {
     cursor: pointer;
-    position: absolute;
     background-color: rgb(113, 227, 146);
     transition: background-color 0.5s, color 0.5s;
     height: 70px;
@@ -74,9 +80,7 @@ button:hover {background-color: rgb(73, 162, 105);}
     left: 44%;
     top: 57%;
 }
-
 #soundOn1, #soundOff1, #soundOn2, #soundOff2 {
-    position: absolute;
     width: 30px;
     height: 30px;
     left: 7px;
@@ -84,10 +88,7 @@ button:hover {background-color: rgb(73, 162, 105);}
 }
 #soundOff1, #soundOff2 {opacity: 0;}
 
-#backArrow {
-    height: 55px;
-    width: 55px;
-}
+#backArrow { height: 55px; width: 55px; }
 
 @font-face {
     font-family: arcadeFont;

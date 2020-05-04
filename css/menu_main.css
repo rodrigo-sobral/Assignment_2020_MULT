@@ -1,13 +1,11 @@
 iframe{
-    position: absolute;
     width: 1250px;
     height: 550px;
     background-image:url("../resources/images/menus/background_lab.png") ;
     background-size: 45%;
 }
-img {
+img, iframe {
     position: absolute;
-
 }
 #title { top: 7%; }
 #yin, #sasha { 

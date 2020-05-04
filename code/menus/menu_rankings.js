@@ -10,7 +10,7 @@ function main() {
     backBtn.addEventListener("mouseup",muda_menu);
     backBtn.addEventListener("mouseenter",playSound);
 }
-function muda_menu() { location.replace("../../index.html") }
+function muda_menu() { location.replace("../../html/menu_main.html") }
 function playSound() {
     var sound= new Audio("../../resources/sounds/buttonSwitchSound.mp3")
     sound.play()

@@ -1,51 +1,47 @@
+iframe, div, button, p, #fotoDei, #cup { position: absolute; }
 iframe{
-    position: absolute;
     width: 1250px;
     height: 550px;
     background-image:url("../resources/images/menus/background_lab.png") ;
     background-size: 45%;
 }
-h1, h2, h3 { position: absolute; font-family: arcadeFont; }
-h1 {
-    font-size: 70px;
-    left: 5%;
-}
-h2 {
-    left: 700px;
-    top: 20px;
-}
-h3 {
-    left: 800px;
-    top: 25px;
-}
 
+h1, h2, h3, p { position: absolute; font-family: arcadeFont; }
+h1 { font-size: 70px; left: 5%; }
+h2 { left: 700px; top: 20px; }
+h3 { left: 800px; top: 25px; }
+
+div, #fotoDei, button {
+    border-bottom: 6px inset rgba(0,0,0,.5);
+	border-left: 6px inset rgba(0,0,0,.5);
+	border-right: 6px inset rgba(255,255,255,.5);
+    border-top: 6px inset rgba(255,255,255,.5);
+}
+div, #fotoDei { border-color: rgb(212, 64, 18); border-radius: 20px; }
+div, p { top: 220px; }
 div {
-    position: absolute;
     background-color: white;
-    border: 5px solid rgb(212, 64, 18);
     opacity: 0.7;
-    width: 750px;
     left: 70px;
-    top: 220px;
+    width: 750px;
     height: 200px;
 }
 p {
     text-align: justify;
     color: black;
-    font-family: arcadeFont;
+    left: 80px;
+    top: 37%;
+    width: 720px;
     padding: 7px;
     line-height: 30px;
 }
 
 #fotoDei{
-    position: relative;
     width: 200px;
     top: 220px;
     left: 70%;
-    border: 5px solid rgb(212, 64, 18);
 }
 #cup {
-    position: absolute;
     width: 75px;
     top: 350px;
     left: 75%;
@@ -53,17 +49,12 @@ p {
 
 button {
     cursor: pointer;
-    position: absolute;
     background-color: rgb(113, 227, 146);
     transition: background-color 0.5s, color 0.5s;
     height: 70px;
     width: 70px;
     top: 80%;
     left: 5%;
-    border-bottom: 6px inset rgba(0,0,0,.5);
-	border-left: 6px inset rgba(0,0,0,.5);
-	border-right: 6px inset rgba(255,255,255,.5);
-	border-top: 6px inset rgba(255,255,255,.5);
 }
 button:hover {background-color: rgb(73, 162, 105);}
 #backArrow {

@@ -1,5 +1,5 @@
+#arrows, #wasd, #shiftLeft, #shiftRight, #esc, h1, p, iframe, button { position: absolute; }
 iframe{
-    position: absolute;
     width: 1250px;
     height: 550px;
     background-image:url("../resources/images/menus/background_lab.png") ;
@@ -7,15 +7,27 @@ iframe{
 }
 
 h1 {
-    position: absolute; 
-    font-family: arcadeFont;
     font-size: 70px;
     left: 5%;
 }
+p,h1 { font-family: arcadeFont; }
+p { font-size: x-large; background-color: rgb(146, 146, 146)}
+#arrows, #wasd { left: 15%; }
+#shiftLeft, #shiftRight, #esc { left: 55%; }
+#arrows, #shiftRight { top: 55%; }
+#wasd, #shiftLeft { top: 30%; }
+#esc { top: 10%; }
+
+#moveYin, #moveSasha { left: 33%; }
+#shootYin, #shootSasha{ left: 70%; }
+#moveYin { top: 35%; }
+#shootYin { top: 32%; }
+#moveSasha { top: 60%; }
+#shootSasha { top: 56%; }
+#pause { left: 62%; top: 10%; }
 
 button {
     cursor: pointer;
-    position: absolute;
     background-color: rgb(113, 227, 146);
     transition: background-color 0.5s, color 0.5s;
     height: 70px;

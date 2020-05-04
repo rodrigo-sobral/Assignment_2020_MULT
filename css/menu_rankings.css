@@ -1,5 +1,5 @@
+h1, iframe, #cup, div, button { position: absolute; }
 iframe{
-    position: absolute;
     width: 1250px;
     height: 550px;
     background-image:url("../resources/images/menus/background_lab.png") ;
@@ -7,14 +7,12 @@ iframe{
 }
 
 h1 {
-    position: absolute; 
     font-family: arcadeFont;
     font-size: 70px;
     left: 5%;
 }
 
 #cup {
-    position: absolute;
     left: 60%;
     top: 23%;
     width: 30%;
@@ -22,7 +20,6 @@ h1 {
 }
 
 div {
-    position: absolute;
     background-color: white;
     opacity: 0.8;
     left: 5%;
@@ -33,7 +30,6 @@ div {
 
 button {
     cursor: pointer;
-    position: absolute;
     background-color: rgb(113, 227, 146);
     transition: background-color 0.5s, color 0.5s;
     height: 70px;
