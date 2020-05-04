@@ -1,0 +1,54 @@
+iframe{
+    position: absolute;
+    top: 10%;
+    left: 30%;
+    width: 600px;
+    height: 600px;
+    background-image:url("../resources/Designs/background_arcs.png") ;
+    background-size: 600px;
+}
+
+/*nav*/
+button {
+    cursor: pointer;
+    transition: background-color 1s, color 1s;
+    background-color: inherit;
+    position: relative;
+    padding: 5px;
+}
+#trainingBtn{
+    background-image: url("../resources/Designs/arc_training_camp.png" );
+}
+#jungleBtn{
+    background-image: url("../resources/Designs/arc_jungle.png");
+}
+#warehouseBtn{
+    background-image: url("../resources/Designs/arc_warehouse.png");
+}
+#labBtn{
+    background-image: url("../resources/Designs/arc_lab.png");
+}
+#cityBtn{
+    background-image: url("../resources/Designs/arc_city.png");
+}
+
+#trainingBtn,#jungleBtn,#warehouseBtn,#labBtn,#cityBtn{
+    border-radius: 15px;
+    background-size: 95px;
+    height: 290px;
+    width: 100px;
+    margin: 5px;
+    top:240px;
+    left: 470px;
+}
+
+#backBtn{
+    border-radius: 20px;
+    background-image: url("../resources/Designs/Back_button.png");
+    background-size: 60px;
+    height: 70px;
+    width: 70px;
+    top:365px;
+    right:100px;
+}
+button:hover {background-color: #006400;}

@@ -1,0 +1,46 @@
+iframe{
+    width: 1250px;
+    height: 550px;
+    background-image:url("../resources/images/menus/background_lab.png") ;
+    background-size: 45%;
+}
+img, iframe {
+    position: absolute;
+}
+#title { top: 7%; }
+#yin, #sasha { 
+    top: 30%;
+    width: 25%;
+}
+#yin, #title { left: 30%; }
+#sasha { left: 70%; }
+#heart{ 
+    top: 40%;
+    left: 55%;
+    width: 15%;
+}
+
+button {
+    cursor: pointer;
+    position: relative;
+    background-color: rgb(113, 227, 146);
+    transition: background-color 0.5s, color 0.5s;
+    font-family: arcadeFont;
+    font-size: x-large;
+    display: block;
+    height:65px;
+    top: 50px;
+    left: 130px;
+    margin: 1rem;
+    min-width: 200px;
+    border-bottom: 6px inset rgba(0,0,0,.5);
+	border-left: 6px inset rgba(0,0,0,.5);
+	border-right: 6px inset rgba(255,255,255,.5);
+	border-top: 6px inset rgba(255,255,255,.5);
+}
+button:hover { background-color: rgb(73, 162, 105); }
+
+@font-face {
+    font-family: arcadeFont;
+    src: url("../resources/fonts/retroFont.ttf");
+}

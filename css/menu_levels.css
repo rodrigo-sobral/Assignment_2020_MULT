@@ -1,0 +1,59 @@
+iframe{
+    position: absolute;
+    top: 10%;
+    left: 30%;
+    width: 600px;
+    height: 600px;
+    background-image:url("../resources/Designs/background_levels.png") ;
+    background-size: 600px;
+}
+
+/*nav*/
+button {
+    cursor: pointer;
+    position: relative;
+    transition: background-color 1s, color 1s;
+    border-radius: 20px;
+    background-color: initial;
+}
+
+#level1Btn{
+    background-image: url("../resources/Designs/Level1_icon.png");
+}
+#level2Btn{
+    background-image: url("../resources/Designs/Level2_icon_Lock.png");
+}
+#level3Btn{
+    background-image: url("../resources/Designs/Level3_icon_lock.png");
+}
+#level4Btn{
+    background-image: url("../resources/Designs/Level4_icon_lock.png");
+}
+#level5Btn{
+    background-image: url("../resources/Designs/Level5_icon_lock.png");
+}
+#level1Btn,#level2Btn,#level3Btn,#level4Btn,#level5Btn{
+    background-size: 95px;
+    height: 100px;
+    width: 100px;
+    margin: 20px;
+}
+#level1Btn,#level2Btn,#level3Btn{
+    top:280px;
+    left:530px;
+}
+#level4Btn,#level5Btn{
+    top:400px;
+    left: 165px;
+}
+#backBtn{
+    background-image: url("../resources/Designs/Back_button.png");
+    background-size: 60px;
+    height: 70px;
+    width: 70px;
+    top:540px;
+    right:250px;
+}
+button:hover {
+    background-color: #006400;
+}

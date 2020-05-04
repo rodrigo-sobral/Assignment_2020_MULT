@@ -1,0 +1,75 @@
+iframe{
+    position: absolute;
+    width: 1250px;
+    height: 550px;
+    background-image:url("../resources/images/menus/background_lab.png") ;
+    background-size: 45%;
+}
+h1, h2, input { position: absolute; font-family: arcadeFont; }
+h1 {
+    font-size: 70px;
+    left: 5%;
+}
+h2 {
+    top: 40%;
+    left: 12%;
+}
+
+#playImg {
+    position: absolute;
+    left: 40%;
+    top: 6%;
+    width: 10%;
+}
+
+button {
+    cursor: pointer;
+    position: absolute;
+    background-color: rgb(113, 227, 146);
+    transition: background-color 0.5s, color 0.5s;
+    font-family: arcadeFont;
+    font-size: x-large;
+    display: block;
+    height: 70px;
+    min-width: 70px;
+    border-bottom: 6px inset rgba(0,0,0,.5);
+	border-left: 6px inset rgba(0,0,0,.5);
+	border-right: 6px inset rgba(255,255,255,.5);
+	border-top: 6px inset rgba(255,255,255,.5);
+}
+button:hover {background-color: rgb(73, 162, 105);}
+
+input {
+    top: 55%;
+    left: 12%;
+    height: 5%;
+    width: 30%;
+    opacity: 0.8;
+}
+
+#playImgBtn {
+    height: 45px;
+    width: 60px;
+}
+
+#playBtn {
+    top: 53%;
+    left: 45%;
+    height: 10%;
+    width: 5%;
+}
+ 
+#backBtn {
+    top: 80%;
+    left: 5%;
+}
+
+#backArrow {
+    height: 55px;
+    width: 55px;
+}
+
+@font-face {
+    font-family: arcadeFont;
+    src: url("../resources/fonts/retroFont.ttf");
+}

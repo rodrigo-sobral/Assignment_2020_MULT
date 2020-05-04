@@ -1,0 +1,51 @@
+#arrows, #wasd, #shiftLeft, #shiftRight, #esc, h1, p, iframe, button { position: absolute; }
+iframe{
+    width: 1250px;
+    height: 550px;
+    background-image:url("../resources/images/menus/background_lab.png") ;
+    background-size: 45%;
+}
+
+h1 {
+    font-size: 70px;
+    left: 5%;
+}
+p,h1 { font-family: arcadeFont; }
+p { font-size: x-large; background-color: rgb(146, 146, 146)}
+#arrows, #wasd { left: 15%; }
+#shiftLeft, #shiftRight, #esc { left: 55%; }
+#arrows, #shiftRight { top: 55%; }
+#wasd, #shiftLeft { top: 30%; }
+#esc { top: 10%; }
+
+#moveYin, #moveSasha { left: 33%; }
+#shootYin, #shootSasha{ left: 70%; }
+#moveYin { top: 35%; }
+#shootYin { top: 32%; }
+#moveSasha { top: 60%; }
+#shootSasha { top: 56%; }
+#pause { left: 62%; top: 10%; }
+
+button {
+    cursor: pointer;
+    background-color: rgb(113, 227, 146);
+    transition: background-color 0.5s, color 0.5s;
+    height: 70px;
+    width: 70px;
+    top: 80%;
+    left: 5%;
+    border-bottom: 6px inset rgba(0,0,0,.5);
+	border-left: 6px inset rgba(0,0,0,.5);
+	border-right: 6px inset rgba(255,255,255,.5);
+	border-top: 6px inset rgba(255,255,255,.5);
+}
+button:hover {background-color: rgb(73, 162, 105);}
+#backArrow {
+    height: 55px;
+    width: 55px;
+}
+
+@font-face {
+    font-family: arcadeFont;
+    src: url("../resources/fonts/retroFont.ttf");
+}
