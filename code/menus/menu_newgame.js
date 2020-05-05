@@ -16,13 +16,13 @@ function main() {
 
 }
 
-function backMainMenu() { location.replace("../../html/menu_play.html") }
+function backMainMenu() { location.replace("menu_play.html") }
 function startGame() { 
     var input= document.getElementsByTagName("input")[0]
     if (input.value=="") {
         window.alert("First, tell me your name!")
     } else {
-        location.replace("../../html/game.html") 
+        location.replace("game.html") 
     }
 }
 

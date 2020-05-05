@@ -47,8 +47,8 @@ function initAllComponents(ctx) {
 		yinSprite= new Image()
 		yinSprite.id= "yin"+ids[i]
 		sashaSprite.id= "sasha"+ids[i]
-		yinSprite.src= "../../resources/images/heroes/yin_sprite"+ids[i]+"1.png"
-		sashaSprite.src="../../resources/images/heroes/Sasha_sprite"+ids[i]+"1.png"
+		yinSprite.src= "../resources/images/heroes/yin_sprite"+ids[i]+"1.png"
+		sashaSprite.src="../resources/images/heroes/Sasha_sprite"+ids[i]+"1.png"
 		yinSprite.addEventListener("load", imgLoadedHandler)
 		sashaSprite.addEventListener("load", imgLoadedHandler)		
 	}
@@ -63,10 +63,10 @@ function initAllComponents(ctx) {
 		sashaSprite.id= "sasha"+ids[i]+"2"
 		auxYin.id="yin"+ids[i]+"3"
 		auxSasha.id="sasha"+ids[i]+"3"
-		yinSprite.src= "../../resources/images/heroes/yin_sprite"+ids[i]+"2.png"
-		sashaSprite.src="../../resources/images/heroes/Sasha_sprite"+ids[i]+"2.png"
-		auxYin.src= "../../resources/images/heroes/yin_sprite"+ids[i]+"3.png"
-		auxSasha.src="../../resources/images/heroes/Sasha_sprite"+ids[i]+"3.png"
+		yinSprite.src= "../resources/images/heroes/yin_sprite"+ids[i]+"2.png"
+		sashaSprite.src="../resources/images/heroes/Sasha_sprite"+ids[i]+"2.png"
+		auxYin.src= "../resources/images/heroes/yin_sprite"+ids[i]+"3.png"
+		auxSasha.src="../resources/images/heroes/Sasha_sprite"+ids[i]+"3.png"
 		yinSprite.addEventListener("load", imgLoadedHandler)
 		sashaSprite.addEventListener("load", imgLoadedHandler)
 		auxYin.addEventListener("load", imgLoadedHandler)
@@ -79,20 +79,20 @@ function initAllComponents(ctx) {
 		if (i==4 || i==6) j=0
 		if (i<4) {
 			bullet_sprite.id="bullet"+ids[j]
-			bullet_sprite.src= "../../resources/images/bullet"+ids[j]+".png"
+			bullet_sprite.src= "../resources/images/bullet"+ids[j]+".png"
 		} else if (i<6) {
 			bullet_sprite.id="bulletDown"+ids[j]
-			bullet_sprite.src= "../../resources/images/bulletDown"+ids[j]+".png"
+			bullet_sprite.src= "../resources/images/bulletDown"+ids[j]+".png"
 		} else {
 			bullet_sprite.id="bulletUp"+ids[j]
-			bullet_sprite.src= "../../resources/images/bulletUp"+ids[j]+".png"
+			bullet_sprite.src= "../resources/images/bulletUp"+ids[j]+".png"
 		}
 		bullet_sprite.addEventListener("load", imgLoadedHandler)
 	}
 
 	var bloco= new Image()
 	bloco.id="bloco"
-	bloco.src="../../resources/images/menus/Game_slot_format.png"
+	bloco.src="../resources/images/menus/Game_slot_format.png"
 	bloco.addEventListener("load", imgLoadedHandler)
 		
 	function imgLoadedHandler(ev) {
@@ -137,7 +137,7 @@ function animLoop(ctx, heroes, blocks) {
 
 var bg= new Image()
 bg.id="bg"
-bg.src="../../resources/images/maps/Training Camp/level1.png"
+bg.src="../resources/images/maps/Training Camp/level1.png"
 function renderGame(ctx, heroes, blocks) {
 	let ch= ctx.canvas.height
 	let cw= ctx.canvas.width
@@ -146,15 +146,15 @@ function renderGame(ctx, heroes, blocks) {
 
 	heroes[ID_SASHA].detectIntersection(heroes[ID_YIN])
 	heroes[ID_YIN].detectIntersection(heroes[ID_SASHA])
-	heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x][heroes[ID_SASHA].y-1])
-	heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x][heroes[ID_SASHA].y+1])
-	heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x-1][heroes[ID_SASHA].y])
-	heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x+1][heroes[ID_SASHA].y])
+	//heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x][heroes[ID_SASHA].y-1])
+	//heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x][heroes[ID_SASHA].y+1])
+	//heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x-1][heroes[ID_SASHA].y])
+	//heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x+1][heroes[ID_SASHA].y])
 
-	heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x][heroes[ID_YIN].y-1])
-	heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x][heroes[ID_YIN].y+1])
-	heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x-1][heroes[ID_YIN].y])
-	heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x+1][heroes[ID_YIN].y])
+	//heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x][heroes[ID_YIN].y-1])
+	//heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x][heroes[ID_YIN].y+1])
+	//heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x-1][heroes[ID_YIN].y])
+	//heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x+1][heroes[ID_YIN].y])
 
 	renderBullets(ctx, heroes[ID_SASHA], heroes[ID_YIN], blocks[0])
 	renderBullets(ctx, heroes[ID_YIN], heroes[ID_SASHA], blocks[0])
@@ -198,13 +198,9 @@ function detectKeyboard(heroes, blocks, ctx) {
 
 }
 
-/**
- * @param {Event} ev 
- * @param {Personagem} heroes
- */
 function keyUpDownHandler(ev, heroes, blocks, ctx) {
 	if (ev.type=="keydown") {
-		if (ev.code=="Escape") location.replace("../../html/menu_newgame.html")
+		if (ev.code=="Escape") location.replace("html/menu_newgame.html")
 		// SHOOT YIN
 		else if (ev.code=="ShiftRight" && heroes[ID_YIN].keyStatus.firing==false) heroes[ID_YIN].defineBullet()
 		// SHOOT SASHA
