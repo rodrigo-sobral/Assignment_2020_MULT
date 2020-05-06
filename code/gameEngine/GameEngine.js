@@ -146,15 +146,15 @@ function renderGame(ctx, heroes, blocks) {
 
 	heroes[ID_SASHA].detectIntersection(heroes[ID_YIN])
 	heroes[ID_YIN].detectIntersection(heroes[ID_SASHA])
-	heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x][heroes[ID_SASHA].y-1])
-	heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x][heroes[ID_SASHA].y+1])
-	heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x-1][heroes[ID_SASHA].y])
-	heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x+1][heroes[ID_SASHA].y])
+	//heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x][heroes[ID_SASHA].y-1])
+	//heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x][heroes[ID_SASHA].y+1])
+	//heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x-1][heroes[ID_SASHA].y])
+	//heroes[ID_SASHA].detectIntersection(blocks[heroes[ID_SASHA].x+1][heroes[ID_SASHA].y])
 
-	heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x][heroes[ID_YIN].y-1])
-	heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x][heroes[ID_YIN].y+1])
-	heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x-1][heroes[ID_YIN].y])
-	heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x+1][heroes[ID_YIN].y])
+	//heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x][heroes[ID_YIN].y-1])
+	//heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x][heroes[ID_YIN].y+1])
+	//heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x-1][heroes[ID_YIN].y])
+	//heroes[ID_YIN].detectIntersection(blocks[heroes[ID_YIN].x+1][heroes[ID_YIN].y])
 
 	renderBullets(ctx, heroes[ID_SASHA], heroes[ID_YIN], blocks[0])
 	renderBullets(ctx, heroes[ID_YIN], heroes[ID_SASHA], blocks[0])
@@ -198,13 +198,9 @@ function detectKeyboard(heroes, blocks, ctx) {
 
 }
 
-/**
- * @param {Event} ev 
- * @param {Personagem} heroes
- */
 function keyUpDownHandler(ev, heroes, blocks, ctx) {
 	if (ev.type=="keydown") {
-		if (ev.code=="Escape") location.replace("../html/menu_newgame.html")
+		if (ev.code=="Escape") location.replace("html/menu_newgame.html")
 		// SHOOT YIN
 		else if (ev.code=="ShiftRight" && heroes[ID_YIN].keyStatus.firing==false) heroes[ID_YIN].defineBullet()
 		// SHOOT SASHA

@@ -20,8 +20,8 @@ function main() {
 
 }
 
-function backMainMenu() { location.replace("../../html/menu_main.html") }
-function newGameMenu() { location.replace("../../html/menu_newgame.html") }
+function backMainMenu() { location.replace("menu_main.html") }
+function newGameMenu() { location.replace("menu_newgame.html") }
 
 function playSound() {
     var sound= new Audio("../../resources/sounds/buttonSwitchSound.mp3")
