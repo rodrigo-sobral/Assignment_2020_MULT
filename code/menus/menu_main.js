@@ -29,7 +29,7 @@ function main() {
     closeBtn.addEventListener("mouseenter", playSound);
 }
 
-function menuPlay() { location.replace("../../html/menu_play.html") }
+function menuPlay() { location.replace("menu_play.html") }
 function menuRanking() { location.replace("../../html/menu_rankings.html") }
 function menuOptions() { location.replace("../../html/menu_options.html") }
 function menuHelp() { location.replace("../../html/menu_help.html") }
