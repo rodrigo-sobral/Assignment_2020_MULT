@@ -1,21 +1,22 @@
 iframe{
     position: absolute;
-    width: 1250px;
-    height: 550px;
+    width: 99%;
+    height: 99%;
     background-image:url("../resources/images/menus/background_lab.png") ;
-    background-size: 45%;
+    background-size: 60%;
 }
 
 h1 {
     position: absolute; 
     font-family: arcadeFont;
-    font-size: 70px;
+    font-size: 5vw;
     left: 5%;
+    top:3%;
 }
 #playImg {
     position: absolute;
     left: 24%;
-    top: 6%;
+    top: 5%;
     width: 10%;
 }
 
@@ -25,11 +26,11 @@ button {
     background-color: rgb(113, 227, 146);
     transition: background-color 0.5s, color 0.5s;
     font-family: arcadeFont;
-    font-size: x-large;
-    display: block;
-    left: 15%;
-    height:65px;
-    min-width: 250px;
+    font-size: 2vw;
+    left: 30%;
+    height:10%;
+    width: 30%;
+    margin: 2vw;
     border-bottom: 6px inset rgba(0,0,0,.5);
 	border-left: 6px inset rgba(0,0,0,.5);
 	border-right: 6px inset rgba(255,255,255,.5);
@@ -37,30 +38,20 @@ button {
 }
 button:hover {background-color: rgb(73, 162, 105);}
 
-#newBtn { top: 35%; } 
+#newBtn { top: 35%; }
 #loadBtn { top: 50%; }
-#deleteBtn { top: 65%; }
 
-div {
-    position: absolute;
-    background-color: white;
-    opacity: 0.8;
-    left: 50%;
-    top: 30%;
-    width: 40%;
-    height: 50%;
-}
 
 #backBtn {
-    height: 70px;
-    min-width: 70px;
+    height: 10%;
+    width: 8%;
     top: 80%;
     left: 5%;
 }
 
 #backArrow {
-    height: 55px;
-    width: 55px;
+    height: 60%;
+    width: 40%;
 }
 
 @font-face {

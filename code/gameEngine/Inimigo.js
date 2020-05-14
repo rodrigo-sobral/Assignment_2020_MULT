@@ -2,8 +2,8 @@
 
 class Inimigo extends BlocoDestrutivel {
     ID_LEFT=0; ID_RIGHT=1; ID_UP=2; ID_DOWN=3
-    BULLET_WIDTH=10; BULLET_HEIGHT=13; BULLET_SPEED=4
-    SHOOTING_RANGE=50; FOLLOW_RANGE=100
+    BULLET_WIDTH=10; BULLET_HEIGHT=13; BULLET_SPEED=4: BULLET_WAITING_TIME=20
+    SHOOTING_RANGE=100; FOLLOW_RANGE=150
     constructor(x, y, width, height, speed) {
         super(x, y, width, height, speed)
         this.walking_sprites= [ [], [], [], [] ]
@@ -21,31 +21,38 @@ class Inimigo extends BlocoDestrutivel {
         var distanceHero2= Math.sqrt(Math.pow(distanceHero2X,2)+Math.pow(distanceHero2Y,2))
         if (distanceHero1<distanceHero2) {
             var aimAngle = Math.atan2(distanceHero1Y,distanceHero1X) / Math.PI * 180
-            defineDirection(distanceHero1, aimAngle, ctx)
+            this.defineDirection(distanceHero1, aimAngle, ctx)
         } else if (distanceHero1>distanceHero2) {
             var aimAngle = Math.atan2(distanceHero2Y,distanceHero2X) / Math.PI * 180
-            defineDirection(distanceHero2, aimAngle, ctx)
+            this.defineDirection(distanceHero2, aimAngle, ctx)
         }
 	}
     
     defineDirection(distance, aimAngle, ctx) {
+        //console.log(aimAngle)
         if (distance<=this.SHOOTING_RANGE) {
             this.defineBullet()
             for (let i=0; i<this.activated_bullets.length ; i++) { this.activated_bullets[i].draw(ctx) }
-        } else if (distance<=this.FOLLOW_RANGE) {
+        } if (distance<=this.FOLLOW_RANGE) {
             if (aimAngle>-25 && aimAngle<25) this.keyStatus.walkRight=true
-            else if (aimAngle>=25 && aimAngle<=65) { this.keyStatus.walkRight=true; this.keyStatus.walkUp=true }
-            else if (aimAngle>65 && aimAngle<115) this.keyStatus.walkUp=true
-            else if (aimAngle>=115 && aimAngle<=155) { this.keyStatus.walkLeft=true; this.keyStatus.walkUp=true }
-            else if (aimAngle<=-25 && aimAngle>=-65) { this.keyStatus.walkRight=true; this.keyStatus.walkDown=true }
+            else if (aimAngle>=25 && aimAngle<=65) { this.keyStatus.walkRight=true; this.keyStatus.walkDown=true }
+            else if (aimAngle>65 && aimAngle<115) this.keyStatus.walkDown=true
+            else if (aimAngle>=115 && aimAngle<=155) { this.keyStatus.walkLeft=true; this.keyStatus.walkDown=true }
+            else if (aimAngle<=-25 && aimAngle>=-65) { this.keyStatus.walkRight=true; this.keyStatus.walkUp=true }
             else if (aimAngle<-65 && aimAngle>-115) this.keyStatus.walkDown=true
             else if (aimAngle<=-115 && aimAngle>=-155) { this.keyStatus.walkLeft=true; this.keyStatus.walkDown=true }
-            else if ((aimAngle>155 && aimAngle<=180) || (aimAngle<-155 && aimAngle>=-180)) { this.keyStatus.walkLeft=true; this.keyStatus.walkUp=true }
+            else if ((aimAngle<-155 || aimAngle>155) || (aimAngle<-155 && aimAngle>=-180)) { this.keyStatus.walkLeft=true; this.keyStatus.walkUp=true }
             this.moving(ctx.canvas.width, ctx.canvas.height)
         } else {
-            
+            if (aimAngle>-25 && aimAngle<25) this.stop("ArrowRight")
+            else if (aimAngle>=25 && aimAngle<=65) { this.stop("ArrowRight"); this.stop("ArrowUp") }
+            else if (aimAngle>65 && aimAngle<115) this.stop("ArrowUp")
+            else if (aimAngle>=115 && aimAngle<=155) { this.stop("ArrowLeft"); this.stop("ArrowUp") }
+            else if (aimAngle<=-25 && aimAngle>=-65) { this.stop("ArrowRight"); this.stop("ArrowDown") }
+            else if (aimAngle<-65 && aimAngle>-115) this.stop("ArrowDown")
+            else if (aimAngle<=-115 && aimAngle>=-155) { this.stop("ArrowLeft"); this.stop("ArrowDown") }
+            else if ((aimAngle>155 && aimAngle<=180) || (aimAngle<-155 && aimAngle>=-180)) { this.stop("ArrowLeft"); this.stop("ArrowUp") }
         }
-        
     }
 
     moving(cw, ch) {
@@ -107,9 +114,7 @@ class Inimigo extends BlocoDestrutivel {
             else this.y=ch-this.height
         }
     }
-    /**
-     * @param {String} code 
-     */
+
     stop(code) {
         if (this.keyStatus.walkUp==true && (code=="ArrowUp" || code=="KeyW")) {
             this.img=this.stopped_sprites[this.ID_UP]

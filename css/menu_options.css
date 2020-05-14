@@ -1,16 +1,16 @@
 #soundOn1, #soundOff1, #soundOn2, #soundOff2, #configImg, button, div, h1, p, iframe { position: absolute; }
 iframe{
-    width: 1250px;
-    height: 550px;
+    width: 99%;
+    height: 99%;
     background-image:url("../resources/images/menus/background_lab.png") ;
-    background-size: 45%;
+    background-size: 60%;
 }
 
 h1, p { font-family: arcadeFont; }
-h1 { font-size: 70px; left: 5%; }
+h1 { font-size: 5vw; left: 5%; top: 3%; }
 p {
-    font-size: x-large;
-    top: 40%;
+    font-size: 2vw;
+    top: 46%;
     left: 5%;
 }
 
@@ -18,8 +18,8 @@ div {
     top: 40%;
     left: 4%;
     background-color: rgb(146, 146, 146);
-    width: 44%;
-    height: 25%;
+    width: 50%;
+    height: 30%;
     opacity: 0.8;
     border-bottom: 6px inset rgba(107, 107, 107, 0.5);
 	border-left: 6px inset rgba(107,107,107,.5);
@@ -30,7 +30,7 @@ div {
 
 #configImg {
     left: 37%;
-    top: 7.5%;
+    top: 6.5%;
     width: 9%;
 }
 
@@ -38,10 +38,11 @@ button {
     cursor: pointer;
     background-color: rgb(113, 227, 146);
     transition: background-color 0.5s, color 0.5s;
-    height: 70px;
-    width: 70px;
+    height: 10%;
+    width: 8%;
     top: 80%;
     left: 5%;
+    margin: 2vw;
     border-bottom: 6px inset rgba(0,0,0,.5);
 	border-left: 6px inset rgba(0,0,0,.5);
 	border-right: 6px inset rgba(255,255,255,.5);
@@ -50,13 +51,13 @@ button {
 button:hover {background-color: rgb(73, 162, 105);}
 
 #plusMusicBtn, #minusMusicBtn, #plusSoundBtn, #minusSoundBtn, #muteMusicBtn, #muteSoundBtn {
-    font-size: xx-large;
-    border-radius: 20px;
-    width: 4%;
-    height: 8%;
+    font-size: 3vw;
+    border-radius: 40%;
+    width: 5%;
+    height: 10%;
 }
 #plusMusicBtn {
-    left: 37%;
+    left: 36%;
     top: 42%;
 }
 #minusMusicBtn {
@@ -64,12 +65,12 @@ button:hover {background-color: rgb(73, 162, 105);}
     top: 42%;
 }
 #muteMusicBtn {
-    left: 44%;
+    left: 42%;
     top: 42%;
 }
 
 #plusSoundBtn {
-    left: 37%;
+    left: 36%;
     top: 57%;
 }
 #minusSoundBtn {
@@ -77,18 +78,18 @@ button:hover {background-color: rgb(73, 162, 105);}
     top: 57%;
 }
 #muteSoundBtn{
-    left: 44%;
+    left: 42%;
     top: 57%;
 }
 #soundOn1, #soundOff1, #soundOn2, #soundOff2 {
-    width: 30px;
-    height: 30px;
-    left: 7px;
-    top: 4px;
+    width: 50%;
+    height: 70%;
+    left: 30%;
+    top: 10%;
 }
 #soundOff1, #soundOff2 {opacity: 0;}
 
-#backArrow { height: 55px; width: 55px; }
+#backArrow { height: 60%; width: 40%; }
 
 @font-face {
     font-family: arcadeFont;

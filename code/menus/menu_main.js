@@ -9,7 +9,6 @@ function main() {
     //backgroundMusic.id="backgroundMusic"
     //backgroundMusic.play()
     var playBtn= document.getElementById("playBtn");
-    var rankingBtn= document.getElementById("rankingBtn");
     var optionsBtn= document.getElementById("optionsBtn");
     var helpBtn= document.getElementById("helpBtn");
     var creditsBtn= document.getElementById("creditsBtn");
@@ -17,8 +16,6 @@ function main() {
 
     playBtn.addEventListener("mouseup",menuPlay);
     playBtn.addEventListener("mouseenter", playSound);
-    rankingBtn.addEventListener("mouseup",menuRanking);
-    rankingBtn.addEventListener("mouseenter", playSound);
     optionsBtn.addEventListener("mouseup",menuOptions);
     optionsBtn.addEventListener("mouseenter", playSound);
     helpBtn.addEventListener("mouseup",menuHelp);

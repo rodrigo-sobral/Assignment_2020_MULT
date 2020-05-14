@@ -1,9 +1,9 @@
-#arrows, #wasd, #shiftLeft, #shiftRight, #esc, h1, p, iframe, button { position: absolute; }
+#arrows, #wasd, #shiftLeft, #shiftRight, #esc,#moveYin,#moveSasha,#shootSasha,#shootYin,#pause, h1, p, iframe, button { position: absolute; }
 iframe{
     width: 99%;
     height: 99%;
     background-image:url("../resources/images/menus/background_lab.png") ;
-    background-size: 100%;
+    background-size: 60%;
 }
 div {
     position: absolute;
@@ -15,7 +15,7 @@ div {
     border-radius: 20px;
     background-color: white;
     opacity: 0.7;
-    top: 20%;
+    top: 30%;
     left: 5%;
     width: 90%;
     height: 45%;
@@ -25,32 +25,36 @@ h1 {
     font-family: arcadeFont;
     font-size: 5vw;
     left: 5%;
+    top:3%;
 }
-p{ font-family: arcadeFont; font-size: 1.5vw;}
+p{ font-family: arcadeFont; font-size: 1vw;}
+
 img, p{position: relative;}
-#arrows, #wasd { left: 15%; width: 10%}
+
+#arrows, #wasd { left: 15%; width: 10%;}
 #shiftLeft, #shiftRight, #esc { left: 55%;}
-#arrows, #shiftRight { top: 55%; }
-#wasd, #shiftLeft { top: 30%; }
-#esc { left: 40%; top: 10%; width: 5%}
+#arrows, #shiftRight { top: 60%; }
+#wasd, #shiftLeft { top: 40%; }
+#esc { left: 40%; top: 50%; width: 5%}
 #shiftLeft, #shiftRight{width: 10%}
 
-#moveYin, #moveSasha { left: 33%; top: 5%; }
+#moveYin, #moveSasha { left: 15%; }
 #shootYin, #shootSasha{ left: 70%; }
-#moveYin { top: 20%; width: 10%;}
-#shootYin { top: -20%; width: 10%;}
-#moveSasha { top: 60%; width: 10%;}
-#shootSasha { top: 25%; width: 10%;}
-#pause { left: 50%; bottom: 55%; width: 10%;}
+#moveYin { top: 35%; width: 10%;}
+#shootYin { top: 60%; width: 10%;}
+#moveSasha { top: 56%; width: 15%;}
+#shootSasha { top: 40%; width: 10%;}
+#pause { left: 40%; bottom: 50%; width: 10%;}
 
 button {
     cursor: pointer;
     background-color: rgb(113, 227, 146);
     transition: background-color 0.5s, color 0.5s;
-    height: 7%;
-    width: 5%;
-    top: 70%;
+    height: 10%;
+    width: 8%;
+    top: 82%;
     left: 5%;
+    margin: 2vw;
     border-bottom: 6px inset rgba(0,0,0,.5);
 	border-left: 6px inset rgba(0,0,0,.5);
 	border-right: 6px inset rgba(255,255,255,.5);
@@ -58,8 +62,8 @@ button {
 }
 button:hover {background-color: rgb(73, 162, 105);}
 #backArrow {
-    height: 100%;
-    width: 100%;
+    height: 60%;
+    width: 40%;
 }
 
 @font-face {
