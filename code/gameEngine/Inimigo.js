@@ -2,8 +2,9 @@
 
 class Inimigo extends BlocoDestrutivel {
     ID_LEFT=0; ID_RIGHT=1; ID_UP=2; ID_DOWN=3
-    BULLET_WIDTH=10; BULLET_HEIGHT=13; BULLET_SPEED=4: BULLET_WAITING_TIME=20
+    BULLET_WIDTH=10; BULLET_HEIGHT=13; BULLET_SPEED=4; BULLET_WAITING_TIME=20
     SHOOTING_RANGE=100; FOLLOW_RANGE=150
+    BULLET_LOADING_TIME=30; TIME_COUNTER=30
     constructor(x, y, width, height, speed) {
         super(x, y, width, height, speed)
         this.walking_sprites= [ [], [], [], [] ]
@@ -12,6 +13,7 @@ class Inimigo extends BlocoDestrutivel {
         this.activated_bullets= new Array()
     }
 
+    //  ONLY ENEMIES USE (AI)
     updateAimFollow(hero1, hero2, ctx) {
 		var distanceHero1X = hero1.x - this.x
         var distanceHero1Y = hero1.y - this.y
@@ -29,19 +31,22 @@ class Inimigo extends BlocoDestrutivel {
 	}
     
     defineDirection(distance, aimAngle, ctx) {
-        //console.log(aimAngle)
+        //  SHOOTING AI
         if (distance<=this.SHOOTING_RANGE) {
-            this.defineBullet()
-            for (let i=0; i<this.activated_bullets.length ; i++) { this.activated_bullets[i].draw(ctx) }
-        } if (distance<=this.FOLLOW_RANGE) {
+            if (this.TIME_COUNTER==this.BULLET_LOADING_TIME) { this.TIME_COUNTER=0; this.defineBullet() }
+            else this.TIME_COUNTER++
+        } 
+        //  ENEMIE FOLLOW HERO
+        if (distance<=this.FOLLOW_RANGE) {
+            this.keyStatus.walkRight=false; this.keyStatus.walkDown=false; this.keyStatus.walkLeft=false; this.keyStatus.walkUp=false
             if (aimAngle>-25 && aimAngle<25) this.keyStatus.walkRight=true
             else if (aimAngle>=25 && aimAngle<=65) { this.keyStatus.walkRight=true; this.keyStatus.walkDown=true }
             else if (aimAngle>65 && aimAngle<115) this.keyStatus.walkDown=true
             else if (aimAngle>=115 && aimAngle<=155) { this.keyStatus.walkLeft=true; this.keyStatus.walkDown=true }
-            else if (aimAngle<=-25 && aimAngle>=-65) { this.keyStatus.walkRight=true; this.keyStatus.walkUp=true }
-            else if (aimAngle<-65 && aimAngle>-115) this.keyStatus.walkDown=true
-            else if (aimAngle<=-115 && aimAngle>=-155) { this.keyStatus.walkLeft=true; this.keyStatus.walkDown=true }
-            else if ((aimAngle<-155 || aimAngle>155) || (aimAngle<-155 && aimAngle>=-180)) { this.keyStatus.walkLeft=true; this.keyStatus.walkUp=true }
+            else if (aimAngle>=-65 && aimAngle<=-25) { this.keyStatus.walkRight=true; this.keyStatus.walkUp=true }
+            else if (aimAngle>-115 && aimAngle<-65) this.keyStatus.walkUp=true
+            else if (aimAngle>=-155 && aimAngle<=-115) { this.keyStatus.walkLeft=true; this.keyStatus.walkUp=true }
+            else if ((aimAngle>155 && aimAngle<=180) || (aimAngle>=-180 && aimAngle<-155)) { this.keyStatus.walkLeft=true }
             this.moving(ctx.canvas.width, ctx.canvas.height)
         } else {
             if (aimAngle>-25 && aimAngle<25) this.stop("ArrowRight")

@@ -40,11 +40,11 @@ function initAllComponents(ctx) {
 	var heroes = new Array(TOT_HEROES)
 	heroes[ID_SASHA] = new Personagem(100, 100, BLOCK_SIZE, BLOCK_SIZE, 2)
 	heroes[ID_YIN]= new Personagem(50, 50, BLOCK_SIZE, BLOCK_SIZE, 2)
-	enemies[0]= new Inimigo(300, 200, BLOCK_SIZE, BLOCK_SIZE, 2)
+	enemies[0]= new Inimigo(300, 200, BLOCK_SIZE, BLOCK_SIZE, 1)
 	var sashaSprite, yinSprite, auxYin, auxSasha, bullet_sprite
 	var enemieSprite, auxEnemie
 	var nLoad = 0
-	//			enemies + bullets + posiçoes paradas + posiçoes caminhando
+	//	enemies + bullets + posiçoes paradas + posiçoes caminhando
 	var totLoad= enemies.length + 8 + 8 + 16
 
 	// LOAD STOPPED HEROES
@@ -197,7 +197,7 @@ function renderGame(ctx, heroes, enemies, blocks) {
 	//	DRAW BULLETS WHEN FIRING
 	renderBullets(ctx, heroes[ID_SASHA], heroes[ID_YIN], enemies[0])
 	renderBullets(ctx, heroes[ID_YIN], heroes[ID_SASHA], enemies[0])
-	renderBullets(ctx, heroes[ID_YIN], heroes[ID_SASHA], enemies[0])
+	//renderBullets(ctx, heroes[ID_YIN], heroes[ID_SASHA], enemies[0])
 
 	//	HEROES MOVEMENT
 	heroes[ID_SASHA].moving(cw, ch)
@@ -222,7 +222,7 @@ function renderBullets(ctx, hero, hero2, enemies) {
 		if (hero2.intersectionWith(bullets[i])==false && enemies.intersectionWith(bullets[i])==false) {
 			if (bullets[i].x>0 && bullets[i].x+bullets[i].width<cw && bullets[i].y>0 && bullets[i].y+bullets[i].height<ch) bullets[i].moving(cw, ch)
 			else hero.activated_bullets.splice(i,1)
-		} else if() hero.activated_bullets.splice(i,1)
+		} else hero.activated_bullets.splice(i,1)
 	}
 }
 

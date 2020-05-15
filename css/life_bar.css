@@ -1,0 +1,48 @@
+.area {
+    padding: 10px;
+    text-align: center;
+}
+
+.SASHA-health-box , .YIN-health-box {
+    position: relative;
+    background-color: rgb(0, 0, 0);
+    height: 28px;
+    width: 30%;
+    border: solid 4px rgba(0, 0, 0, 0);
+}
+.YIN-health-box {
+    left: 50%;
+}
+
+.SASHA-health-bar , .YIN-health-bar {
+	background-color: #007f00;
+    width: inherit;
+    height: 28px;
+    position: relative;
+    bottom: 56px;
+}
+
+.SASHA-health-bar-red , .YIN-health-bar-red {
+    width: 100%;
+    height: 100%;
+    background-color: #cc0000;
+}
+
+.SASHA-health-bar-blue , .YIN-health-bar-blue {
+    width: 100%;
+    height: 100%;
+    background-color: #3bd3df;
+    bottom: 28px;
+    position: relative;
+}
+
+.SASHA-health-bar-text , .YIN-health-bar-text {
+    position: relative;
+    font-family: arcadeFont;
+    bottom: 80px;
+}
+
+@font-face {
+    font-family: arcadeFont;
+    src: url("../resources/fonts/retroFont.ttf");
+}
