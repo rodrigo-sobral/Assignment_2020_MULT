@@ -7,6 +7,7 @@
 const TOT_HEROES=2
 const ID_SASHA=0, ID_YIN=1
 const BLOCK_SIZE=40
+const MAX_LOOSING_HP=50, MIN_LOOSING_HP=25
 
 function main() {
 	var canvas = document.getElementById("canvas")
@@ -23,8 +24,9 @@ function main() {
 
 		heroes[ID_SASHA].img=heroes[ID_SASHA].stopped_sprites[0]
 		heroes[ID_YIN].img=heroes[ID_YIN].stopped_sprites[0]
-		heroes[ID_SASHA].imgData=heroes[ID_SASHA].getImageData()
-		heroes[ID_YIN].imgData=heroes[ID_YIN].getImageData()
+		heroes[ID_SASHA].imgData=heroes[ID_SASHA].getImageData("stopLeft")
+		heroes[ID_YIN].imgData=heroes[ID_YIN].getImageData("stopLeft")
+
 		enemies[0].img=enemies[0].stopped_sprites[3]
 		enemies[0].imgData=enemies[0].getImageData()
 
@@ -195,9 +197,9 @@ function renderGame(ctx, heroes, enemies, blocks) {
 	heroes[ID_YIN].detectIntersection(enemies[0])
 
 	//	DRAW BULLETS WHEN FIRING
-	renderBullets(ctx, heroes[ID_SASHA], heroes[ID_YIN], enemies[0])
-	renderBullets(ctx, heroes[ID_YIN], heroes[ID_SASHA], enemies[0])
-	//renderBullets(ctx, heroes[ID_YIN], heroes[ID_SASHA], enemies[0])
+	renderBullets(ctx, heroes[ID_SASHA], [enemies[0],heroes[ID_YIN]])
+	renderBullets(ctx, heroes[ID_YIN], [enemies[0],heroes[ID_SASHA]])
+	renderBullets(ctx, enemies[0], heroes)
 
 	//	HEROES MOVEMENT
 	heroes[ID_SASHA].moving(cw, ch)
@@ -212,17 +214,30 @@ function renderGame(ctx, heroes, enemies, blocks) {
 	drawSprites(ctx, enemies)
 	drawSprites(ctx, heroes[ID_SASHA].activated_bullets)
 	drawSprites(ctx, heroes[ID_YIN].activated_bullets)
+	drawSprites(ctx, enemies[0].activated_bullets)
 }
 
-function renderBullets(ctx, hero, hero2, enemies) {
-	let bullets= hero.activated_bullets
+function renderBullets(ctx, shooter, shooteds) {
+	let bullets= shooter.activated_bullets
 	let cw=ctx.canvas.width, ch=ctx.canvas.height
 	if (bullets.length==0) return
+
 	for (let i=0; i<bullets.length; i++) {
-		if (hero2.intersectionWith(bullets[i])==false && enemies.intersectionWith(bullets[i])==false) {
-			if (bullets[i].x>0 && bullets[i].x+bullets[i].width<cw && bullets[i].y>0 && bullets[i].y+bullets[i].height<ch) bullets[i].moving(cw, ch)
-			else hero.activated_bullets.splice(i,1)
-		} else hero.activated_bullets.splice(i,1)
+		if (bullets[i].x>0 && bullets[i].x+bullets[i].width<cw && bullets[i].y>0 && bullets[i].y+bullets[i].height<ch) {
+			for (let shooted = 0; shooted < shooteds.length; shooted++) {
+				if (bullets.length==0) return
+				else if (shooteds[shooted].intersectionWith(bullets[i])==false) {
+					bullets[i].moving(cw, ch)
+				} else {
+					shooter.activated_bullets.splice(i,1)
+					if (Inimigo.prototype.isPrototypeOf(shooter)==true && Personagem.prototype.isPrototypeOf(shooteds[shooted])==true) 
+						shooteds[shooted].health-= Math.floor(Math.random() * (MAX_LOOSING_HP - MIN_LOOSING_HP) ) + MIN_LOOSING_HP
+					else if (Personagem.prototype.isPrototypeOf(shooter)==true && Inimigo.prototype.isPrototypeOf(shooteds[shooted])==true)
+						shooteds[shooted].health-= Math.floor(Math.random() * (MAX_LOOSING_HP - MIN_LOOSING_HP) ) + MIN_LOOSING_HP
+					if (shooteds[shooted].health<0) shooteds[shooted].health=0
+				}
+			}
+		} else shooter.activated_bullets.splice(i,1)
 	}
 }
 

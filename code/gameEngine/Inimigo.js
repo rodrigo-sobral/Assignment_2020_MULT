@@ -2,18 +2,23 @@
 
 class Inimigo extends BlocoDestrutivel {
     ID_LEFT=0; ID_RIGHT=1; ID_UP=2; ID_DOWN=3
-    BULLET_WIDTH=10; BULLET_HEIGHT=13; BULLET_SPEED=4; BULLET_WAITING_TIME=20
-    SHOOTING_RANGE=100; FOLLOW_RANGE=150
-    BULLET_LOADING_TIME=30; TIME_COUNTER=30
+    BULLET_WIDTH=10; BULLET_HEIGHT=13; BULLET_SPEED=3; BULLET_WAITING_TIME=20
+    SHOOTING_RANGE=125; FOLLOW_RANGE=150
+    BULLET_LOADING_TIME=50; TIME_COUNTER=50
     constructor(x, y, width, height, speed) {
         super(x, y, width, height, speed)
         this.walking_sprites= [ [], [], [], [] ]
         this.stopped_sprites= new Array()
         this.bullets= new Array()
         this.activated_bullets= new Array()
+        this.walkingSound= new Audio("../../resources/sounds/walkingSound.mp3")
+        this.walkingSound.loop=true
+        this.walkingSound.volume=0.3
     }
 
-    //  ONLY ENEMIES USE (AI)
+    //  ==========================================
+    //  ENEMIES AI
+    //  ==========================================
     updateAimFollow(hero1, hero2, ctx) {
 		var distanceHero1X = hero1.x - this.x
         var distanceHero1Y = hero1.y - this.y
@@ -23,20 +28,18 @@ class Inimigo extends BlocoDestrutivel {
         var distanceHero2= Math.sqrt(Math.pow(distanceHero2X,2)+Math.pow(distanceHero2Y,2))
         if (distanceHero1<distanceHero2) {
             var aimAngle = Math.atan2(distanceHero1Y,distanceHero1X) / Math.PI * 180
-            this.defineDirection(distanceHero1, aimAngle, ctx)
+            this.defineDirection(distanceHero1, aimAngle, ctx, [hero1, hero2])
         } else if (distanceHero1>distanceHero2) {
             var aimAngle = Math.atan2(distanceHero2Y,distanceHero2X) / Math.PI * 180
-            this.defineDirection(distanceHero2, aimAngle, ctx)
+            this.defineDirection(distanceHero2, aimAngle, ctx, [hero1, hero2])
         }
 	}
     
-    defineDirection(distance, aimAngle, ctx) {
-        //  SHOOTING AI
+    defineDirection(distance, aimAngle, ctx, otherSprites) {
         if (distance<=this.SHOOTING_RANGE) {
             if (this.TIME_COUNTER==this.BULLET_LOADING_TIME) { this.TIME_COUNTER=0; this.defineBullet() }
             else this.TIME_COUNTER++
         } 
-        //  ENEMIE FOLLOW HERO
         if (distance<=this.FOLLOW_RANGE) {
             this.keyStatus.walkRight=false; this.keyStatus.walkDown=false; this.keyStatus.walkLeft=false; this.keyStatus.walkUp=false
             if (aimAngle>-25 && aimAngle<25) this.keyStatus.walkRight=true
@@ -47,6 +50,9 @@ class Inimigo extends BlocoDestrutivel {
             else if (aimAngle>-115 && aimAngle<-65) this.keyStatus.walkUp=true
             else if (aimAngle>=-155 && aimAngle<=-115) { this.keyStatus.walkLeft=true; this.keyStatus.walkUp=true }
             else if ((aimAngle>155 && aimAngle<=180) || (aimAngle>=-180 && aimAngle<-155)) { this.keyStatus.walkLeft=true }
+            for (let sprite = 0; sprite < otherSprites.length; sprite++) {
+                if (this.detectIntersection(otherSprites[sprite])!=false) return
+            }
             this.moving(ctx.canvas.width, ctx.canvas.height)
         } else {
             if (aimAngle>-25 && aimAngle<25) this.stop("ArrowRight")
@@ -59,7 +65,10 @@ class Inimigo extends BlocoDestrutivel {
             else if ((aimAngle>155 && aimAngle<=180) || (aimAngle<-155 && aimAngle>=-180)) { this.stop("ArrowLeft"); this.stop("ArrowUp") }
         }
     }
-
+    
+    //  ==========================================
+    //  CHARACTERS MOVEMENT AND INTERSECTIONS
+    //  ==========================================
     moving(cw, ch) {
         if (this.keyStatus.walkLeft==true) {
             if (this.keyStatus.walkUp!=true && this.keyStatus.walkDown!=true)  { 
@@ -142,8 +151,21 @@ class Inimigo extends BlocoDestrutivel {
             this.keyStatus.walkRight=false
             this.keyStatus.stopRight=true
         }
+        if (this.keyStatus.walkLeft==false && this.keyStatus.walkRight==false && this.keyStatus.walkUp==false && this.keyStatus.walkDown==false) this.walkingSound.pause()
     }
 
+    detectIntersection(sprite) {
+        var contactPoint= this.intersectionWith(sprite)
+        if (contactPoint==false) return false
+        else if (contactPoint[0]<sprite.x+sprite.width/2) this.stop("ArrowRight")
+        else if (contactPoint[0]>sprite.x+sprite.width/2) this.stop("ArrowLeft")
+        if (contactPoint[1]<sprite.y+sprite.height/2) this.stop("ArrowDown")
+        else if (contactPoint[1]>sprite.y+sprite.height/2) this.stop("ArrowUp")
+    }
+    
+    //  ==========================================
+    //  BULLET SYSTEM
+    //  ==========================================
     defineBullet() {
         let shooted_bullet
         if (this.keyStatus.walkUp==true && this.keyStatus.walkLeft==true) {
