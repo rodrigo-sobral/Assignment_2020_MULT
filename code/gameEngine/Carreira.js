@@ -6,10 +6,10 @@ class Carreira {
         this.level = level
     }
 
-    saveCarreer() {
+    saveCareer() {
         const fs = require('fs')
         let data = this.name + " " + this.level
-        fs.writeFile('../Save/Carrer.txt', data, (err) => {
+        fs.writeFile('../Save/Career.txt', data, (err) => {
             if (err) throw err;
         })
     }

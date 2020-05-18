@@ -36,6 +36,18 @@ function main() {
 	}
 }
 
+function LoadCareer() {
+	const fs = require('fs');
+	let data;
+	fs.readFile('../Save/Career.txt',(err,data) => {
+		if (err) throw err;
+		console.log(data)
+	})
+	let temp = data.split(" ");
+	let career = new Carreira(temp[0],temp[1])
+	return career
+}
+
 function initAllComponents(ctx) {
 	var ids=["Left", "Right", "Up", "Down"]
 	var enemies = new Array(1)

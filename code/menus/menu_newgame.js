@@ -22,7 +22,18 @@ function startGame() {
     if (input.value=="") {
         window.alert("First, tell me your name!")
     } else {
-        location.replace("game.html") 
+        if (confirm("Delete saved data?")) {
+            if (confirm("All the data from the previous game will be deleted and you won't be able to recover it. Are you sure u want to proceed?")) {
+                console.log("hi")
+                const fs = require('fs')
+                let data = input.value + " 00"
+                fs.writeFile('../Save/Career.txt', data, (err) => {
+                    if (err) throw err;
+                })
+                console.log("hello")
+                location.replace("game.html")
+            }
+        }
     }
 }
 
