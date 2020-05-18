@@ -24,13 +24,8 @@ function startGame() {
     } else {
         if (confirm("Delete saved data?")) {
             if (confirm("All the data from the previous game will be deleted and you won't be able to recover it. Are you sure u want to proceed?")) {
-                console.log("hi")
-                const fs = require('fs')
-                let data = input.value + " 00"
-                fs.writeFile('../Save/Career.txt', data, (err) => {
-                    if (err) throw err;
-                })
-                console.log("hello")
+                let new_career = new Carreira(input.value,"00")
+                localStorage.setItem('career', JSON.stringify(new_career));
                 location.replace("game.html")
             }
         }

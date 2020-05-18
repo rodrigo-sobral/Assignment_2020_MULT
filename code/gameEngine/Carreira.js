@@ -7,10 +7,7 @@ class Carreira {
     }
 
     saveCareer() {
-        const fs = require('fs')
-        let data = this.name + " " + this.level
-        fs.writeFile('../Save/Career.txt', data, (err) => {
-            if (err) throw err;
-        })
+        localStorage.setItem('career', JSON.stringify(this));
+        localStorage.setItem('level', '00');
     }
 }

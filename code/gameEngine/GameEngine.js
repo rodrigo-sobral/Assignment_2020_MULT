@@ -14,6 +14,8 @@ function main() {
 	var ctx = canvas.getContext("2d")
 	var heroes, enemies
 	//var level1= new Nivel(1, "training_camp", "../resources/images/maps/Training Camp/level1.png")
+	var career = LoadCareer()
+	console.log(career.name)
 
 	initAllComponents(ctx)
 	canvas.addEventListener("initend", initEndHandler)
@@ -37,14 +39,7 @@ function main() {
 }
 
 function LoadCareer() {
-	const fs = require('fs');
-	let data;
-	fs.readFile('../Save/Career.txt',(err,data) => {
-		if (err) throw err;
-		console.log(data)
-	})
-	let temp = data.split(" ");
-	let career = new Carreira(temp[0],temp[1])
+	let career = JSON.parse(localStorage.getItem('career'));
 	return career
 }
 
