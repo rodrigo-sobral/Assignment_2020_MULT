@@ -27,6 +27,7 @@ class ElementoSolto extends ElementoFixo {
         return audio
     }
 
+    //  MOVEMENT WITHOUT ANIMATION
     moving(cw, ch) {
         if (this.keyStatus.walkLeft==true) {
             if(this.x>0) this.x-=this.speed

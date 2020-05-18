@@ -41,12 +41,9 @@ function playSound() {
     sound.play()
 }
 
-function volumeUp(ev) {
+function volumeUp(ev) { }
+function volumeDown(ev) { }
 
-}
-function volumeDown(ev) {
-
-}
 function mute(ev) {
     var soundOn1= document.getElementById("soundOn1")
     var soundOn2= document.getElementById("soundOn2")
