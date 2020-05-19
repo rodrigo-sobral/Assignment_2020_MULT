@@ -12,10 +12,9 @@ const MAX_LOOSING_HP=50, MIN_LOOSING_HP=25
 function main() {
 	var canvas = document.getElementById("canvas")
 	var ctx = canvas.getContext("2d")
-	var heroes, enemies
-	//var level1= new Nivel(1, "training_camp", "../resources/images/maps/Training Camp/level1.png")
+	var heroes, enemies, healths
+	//var level1= new Nivel(1, "training_camp", "../resources/images/maps/Training Camp/level1.png", 2, canvas)
 	var career = LoadCareer()
-	console.log(career.name)
 
 	initAllComponents(ctx)
 	canvas.addEventListener("initend", initEndHandler)
@@ -23,6 +22,7 @@ function main() {
 	function initEndHandler(ev) {
 		heroes= ev.heroes
 		enemies= ev.enemies
+		healths= ev.healths
 
 		heroes[ID_SASHA].img=heroes[ID_SASHA].stopped_sprites[0]
 		heroes[ID_YIN].img=heroes[ID_YIN].stopped_sprites[0]
@@ -32,9 +32,10 @@ function main() {
 		enemies[0].img=enemies[0].stopped_sprites[3]
 		enemies[0].imgData=enemies[0].getImageData()
 
+		//drawBlocks(ctx, blocks)
 		drawSprites(ctx, enemies)
 		drawSprites(ctx, heroes)
-		animLoop(ctx, heroes, enemies, undefined)
+		animLoop(ctx, heroes, enemies, undefined, healths)
 	}
 }
 
@@ -156,6 +157,7 @@ function initAllComponents(ctx) {
 			var ev2 = new Event("initend");
 			ev2.heroes= heroes
 			ev2.enemies= enemies
+			ev2.healths= new Healths(heroes[ID_SASHA].health, heroes[ID_YIN].health)
 			ctx.canvas.dispatchEvent(ev2);
 		}
 	}
@@ -171,31 +173,33 @@ function drawBlocks(ctx, blocks) {
 	}
 }
 
-function animLoop(ctx, heroes, enemies, blocks) {
-	var al = function() { animLoop(ctx, heroes, enemies) }
+function animLoop(ctx, heroes, enemies, blocks, healths) {
+	var al = function() { animLoop(ctx, heroes, enemies, blocks, healths) }
 	window.requestAnimationFrame(al)
 	
-	renderGame(ctx, heroes, enemies, blocks)
+	renderGame(ctx, heroes, enemies, blocks, healths)
 }
 
 var bg= new Image()
 bg.id="bg"
 bg.src="../resources/images/maps/Training Camp/level1.png"
-function renderGame(ctx, heroes, enemies, blocks) {
+function renderGame(ctx, heroes, enemies, blocks, healths) {
 	let ch= ctx.canvas.height
 	let cw= ctx.canvas.width
 	
 	detectKeyboard(heroes, enemies, ctx)
 
 	//	INTERSECTIONS WITH BLOCKS
-	//heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32)][Math.floor(heroes[ID_SASHA].y/32-1)])
-	//heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32)][Math.floor(heroes[ID_SASHA].y/32+1)])
-	//heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32-1)][Math.floor(heroes[ID_SASHA].y/32)])
-	//heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32+1)][Math.floor(heroes[ID_SASHA].y/32)])
-	//heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32)][Math.floor(heroes[ID_YIN].y/32-1)])
-	//heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32)][Math.floor(heroes[ID_YIN].y/32+1)])
-	//heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32-1)][Math.floor(heroes[ID_YIN].y/32)])
-	//heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32+1)][Math.floor(heroes[ID_YIN].y/32)])
+	/*
+	heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32)][Math.floor(heroes[ID_SASHA].y/32-1)])
+	heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32)][Math.floor(heroes[ID_SASHA].y/32+1)])
+	heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32-1)][Math.floor(heroes[ID_SASHA].y/32)])
+	heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32+1)][Math.floor(heroes[ID_SASHA].y/32)])
+	heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32)][Math.floor(heroes[ID_YIN].y/32-1)])
+	heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32)][Math.floor(heroes[ID_YIN].y/32+1)])
+	heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32-1)][Math.floor(heroes[ID_YIN].y/32)])
+	heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32+1)][Math.floor(heroes[ID_YIN].y/32)])
+	*/
 
 	//	INTERSECTIONS BETWEEN HEROES
 	heroes[ID_SASHA].detectIntersection(heroes[ID_YIN])
@@ -206,9 +210,9 @@ function renderGame(ctx, heroes, enemies, blocks) {
 	}
 
 	//	DRAW BULLETS WHEN FIRING
-	renderBullets(ctx, heroes[ID_SASHA], [heroes[ID_YIN], enemies[0]])
-	renderBullets(ctx, heroes[ID_YIN], [heroes[ID_SASHA], enemies[0]])
-	renderBullets(ctx, enemies[0], heroes)
+	renderBullets(ctx, heroes[ID_SASHA], [heroes[ID_YIN], enemies[0]], healths)
+	renderBullets(ctx, heroes[ID_YIN], [heroes[ID_SASHA], enemies[0]], healths)
+	renderBullets(ctx, enemies[0], heroes, healths)
 
 	//	HEROES MOVEMENT
 	heroes[ID_SASHA].moving(cw, ch)
@@ -228,7 +232,7 @@ function renderGame(ctx, heroes, enemies, blocks) {
 		drawSprites(ctx, enemies[0].activated_bullets)
 }
 
-function renderBullets(ctx, shooter, shooteds) {
+function renderBullets(ctx, shooter, shooteds, healths) {
 	let bullets= shooter.activated_bullets
 	let cw=ctx.canvas.width, ch=ctx.canvas.height
 	if (bullets.length==0) return
@@ -242,10 +246,12 @@ function renderBullets(ctx, shooter, shooteds) {
 				} else {
 					shooter.activated_bullets.splice(i,1)
 					if (Inimigo.prototype.isPrototypeOf(shooter)==true && Personagem.prototype.isPrototypeOf(shooteds[shooted])==true) 
-						shooteds[shooted].health-= Math.floor(Math.random() * (MAX_LOOSING_HP - MIN_LOOSING_HP) ) + MIN_LOOSING_HP
+						shooteds[shooted].health-= Math.floor(Math.random() * (MAX_LOOSING_HP/2 - MIN_LOOSING_HP/5) ) + MIN_LOOSING_HP/5
+						if (shooted==ID_SASHA) healths.damageSasha(shooteds[shooted].FULL_HEALTH-shooteds[shooted].health)
+						else if (shooted==ID_YIN) healths.damageYin(shooteds[shooted].FULL_HEALTH-shooteds[shooted].health)
 					else if (Personagem.prototype.isPrototypeOf(shooter)==true && Inimigo.prototype.isPrototypeOf(shooteds[shooted])==true)
 						shooteds[shooted].health-= Math.floor(Math.random() * (MAX_LOOSING_HP - MIN_LOOSING_HP) ) + MIN_LOOSING_HP
-					console.log(shooteds[shooted].health)
+					
 					//if (shooteds[shooted].health<=0) 
 						//shooteds.splice(shooted,1)
 				}

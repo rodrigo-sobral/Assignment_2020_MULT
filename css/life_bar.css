@@ -4,16 +4,19 @@
 }
 
 .SASHA-health-box , .YIN-health-box {
-    position: relative;
+    position: absolute;
     background-color: rgb(0, 0, 0);
     height: 28px;
-    width: 30%;
+    top: 90%;
+    width: 20%;
     border: solid 4px rgba(0, 0, 0, 0);
 }
+.SASHA-health-box {
+    left: 20%;
+} 
 .YIN-health-box {
-    left: 50%;
+    left: 55%;
 }
-
 .SASHA-health-bar , .YIN-health-bar {
 	background-color: #007f00;
     width: inherit;
@@ -40,6 +43,7 @@
     position: relative;
     font-family: arcadeFont;
     bottom: 80px;
+    color: rgb(177, 16, 16);
 }
 
 @font-face {

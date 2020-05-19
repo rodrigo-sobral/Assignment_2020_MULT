@@ -24,7 +24,7 @@ function startGame() {
     } else {
         if (confirm("Delete saved data?")) {
             if (confirm("All the data from the previous game will be deleted and you won't be able to recover it. Are you sure u want to proceed?")) {
-                let new_career = new Carreira(input.value,"00")
+                let new_career = new Carreira(input.value,"11")
                 localStorage.setItem('career', JSON.stringify(new_career));
                 location.replace("game.html")
             }

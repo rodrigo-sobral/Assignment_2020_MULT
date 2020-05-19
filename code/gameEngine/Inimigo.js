@@ -1,8 +1,12 @@
 "use strict"
 
-class Inimigo extends BlocoDestrutivel {
+class Inimigo extends ElementoSolto {
+    //  AUX CONSTANTS
     ID_LEFT=0; ID_RIGHT=1; ID_UP=2; ID_DOWN=3
+    FULL_HEALTH= 100
+    //  BULLETS CONSTANTS
     BULLET_WIDTH=10; BULLET_HEIGHT=13; BULLET_SPEED=3; BULLET_WAITING_TIME=20
+    //  ENEMIES AI CONSTANTS
     SHOOTING_RANGE=125; FOLLOW_RANGE=150
     BULLET_LOADING_TIME=50; TIME_COUNTER=50
     constructor(x, y, width, height, speed) {
@@ -11,9 +15,12 @@ class Inimigo extends BlocoDestrutivel {
         this.stopped_sprites= new Array()
         this.bullets= new Array()
         this.activated_bullets= new Array()
+
         this.walkingSound= new Audio("../../resources/sounds/walkingSound.mp3")
         this.walkingSound.loop=true
         this.walkingSound.volume=0.3
+
+        this.health= this.FULL_HEALTH
     }
 
     //  ==========================================
