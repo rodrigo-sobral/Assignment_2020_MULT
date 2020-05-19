@@ -193,18 +193,21 @@ function renderGame(ctx, heroes, enemies, blocks) {
 	//	INTERSECTIONS BETWEEN HEROES
 	heroes[ID_SASHA].detectIntersection(heroes[ID_YIN])
 	heroes[ID_YIN].detectIntersection(heroes[ID_SASHA])
-	heroes[ID_SASHA].detectIntersection(enemies[0])
-	heroes[ID_YIN].detectIntersection(enemies[0])
+	if (enemies.length!=0) {
+		heroes[ID_SASHA].detectIntersection(enemies[0])
+		heroes[ID_YIN].detectIntersection(enemies[0])
+	}
 
 	//	DRAW BULLETS WHEN FIRING
-	renderBullets(ctx, heroes[ID_SASHA], [enemies[0],heroes[ID_YIN]])
-	renderBullets(ctx, heroes[ID_YIN], [enemies[0],heroes[ID_SASHA]])
+	renderBullets(ctx, heroes[ID_SASHA], [heroes[ID_YIN], enemies[0]])
+	renderBullets(ctx, heroes[ID_YIN], [heroes[ID_SASHA], enemies[0]])
 	renderBullets(ctx, enemies[0], heroes)
 
 	//	HEROES MOVEMENT
 	heroes[ID_SASHA].moving(cw, ch)
 	heroes[ID_YIN].moving(cw, ch)
-	enemies[0].updateAimFollow(heroes[ID_SASHA], heroes[ID_YIN], ctx)
+	if (enemies.length!=0)
+		enemies[0].updateAimFollow(heroes[ID_SASHA], heroes[ID_YIN], ctx)
 	
 	ctx.clearRect(0, 0, cw, ch)
 	//	DRAW EVERYTING HERE
@@ -214,7 +217,8 @@ function renderGame(ctx, heroes, enemies, blocks) {
 	drawSprites(ctx, enemies)
 	drawSprites(ctx, heroes[ID_SASHA].activated_bullets)
 	drawSprites(ctx, heroes[ID_YIN].activated_bullets)
-	drawSprites(ctx, enemies[0].activated_bullets)
+	if (enemies.length!=0)
+		drawSprites(ctx, enemies[0].activated_bullets)
 }
 
 function renderBullets(ctx, shooter, shooteds) {
@@ -225,7 +229,7 @@ function renderBullets(ctx, shooter, shooteds) {
 	for (let i=0; i<bullets.length; i++) {
 		if (bullets[i].x>0 && bullets[i].x+bullets[i].width<cw && bullets[i].y>0 && bullets[i].y+bullets[i].height<ch) {
 			for (let shooted = 0; shooted < shooteds.length; shooted++) {
-				if (bullets.length==0) return
+				if (bullets.length==0 || i==bullets.length) return
 				else if (shooteds[shooted].intersectionWith(bullets[i])==false) {
 					bullets[i].moving(cw, ch)
 				} else {
@@ -234,11 +238,14 @@ function renderBullets(ctx, shooter, shooteds) {
 						shooteds[shooted].health-= Math.floor(Math.random() * (MAX_LOOSING_HP - MIN_LOOSING_HP) ) + MIN_LOOSING_HP
 					else if (Personagem.prototype.isPrototypeOf(shooter)==true && Inimigo.prototype.isPrototypeOf(shooteds[shooted])==true)
 						shooteds[shooted].health-= Math.floor(Math.random() * (MAX_LOOSING_HP - MIN_LOOSING_HP) ) + MIN_LOOSING_HP
-					if (shooteds[shooted].health<0) shooteds[shooted].health=0
+					console.log(shooteds[shooted].health)
+					//if (shooteds[shooted].health<=0) 
+						//shooteds.splice(shooted,1)
 				}
 			}
 		} else shooter.activated_bullets.splice(i,1)
 	}
+	return shooteds
 }
 
 function detectKeyboard(heroes, enemies, ctx) {
