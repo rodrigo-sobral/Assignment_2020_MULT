@@ -1,0 +1,92 @@
+"use strict"
+$ = jQuery
+
+class Healths {
+	constructor (sashaHealth, yinHealth) {
+		this.sashaFullHealth = sashaHealth
+		this.yinFullHealth= yinHealth	
+		this.sashaCurHealth = this.sashaFullHealth
+		this.yinCurHealth = this.yinFullHealth
+		$(".SASHA-health-bar-text").html("Sasha "+this.sashaCurHealth)
+		$(".SASHA-health-bar").css({ "width": "100%"})
+		$(".YIN-health-bar-text").html("Yin "+this.yinCurHealth)
+		$(".YIN-health-bar").css({ "width": "100%"})
+	}
+
+	//=======================================
+	//				SASHA HEALTH
+	//=======================================
+	damageSasha(damage) {
+		if (this.sashaCurHealth != 0) {
+			$(".SASHA-health-bar-red, .SASHA-health-bar").stop()
+			this.sashaCurHealth = this.sashaCurHealth - damage
+			if (this.sashaCurHealth < 0) {
+				this.sashaCurHealth = 0
+				$('.SASHA-health-bar-red, .SASHA-health-bar')
+			}
+			this.applySashaChange()
+		}
+	}
+	healSasha(heal) {
+		if (this.sashaCurHealth != this.sashaFullHealth) {
+			$(".SASHA-health-bar-red, .SASHA-health-bar-blue, .SASHA-health-bar").stop()
+			this.sashaCurHealth = this.sashaCurHealth + heal
+			if (this.sashaCurHealth > this.sashaFullHealth) {
+				this.sashaCurHealth = this.sashaFullHealth
+			}
+			this.applySashaChange()
+		}
+	}
+
+	applySashaChange() {
+		$(".SASHA-health-bar-text").html("Sasha "+this.sashaCurHealth)
+		$(".SASHA-health-bar-red").animate({
+			'width': this.sashaCurHealth + "%"
+		}, 700)
+		$(".SASHA-health-bar").animate({
+			'width': this.sashaCurHealth + "%"
+		}, 500)
+		$(".SASHA-health-bar-blue").animate({
+			'width': this.sashaCurHealth + "%"
+		}, 300)
+	}
+
+	//=======================================
+	//				YIN HEALTH
+	//=======================================
+	
+	damageYin(damage) {
+		if (this.yinCurHealth != 0) {
+			$(".YIN-health-bar-red, .YIN-health-bar").stop()
+			this.yinCurHealth = this.yinCurHealth - damage
+			if (this.yinCurHealth < 0) {
+				this.yinCurHealth = 0
+				$('.YIN-health-bar-red, .YIN-health-bar')
+			}
+			this.applyYinChange()
+		}
+	}
+	healYin(heal) {
+		if (this.yinCurHealth != this.yinFullHealth) {
+			$(".YIN-health-bar-red, .YIN-health-bar-blue, .YIN-health-bar").stop()
+			this.yinCurHealth = this.yinCurHealth + heal
+			if (this.yinCurHealth > this.yinFullHealth) {
+				this.yinCurHealth = this.yinFullHealth
+			}
+			this.applyYinChange()
+		}
+	}
+
+	applyYinChange() {
+		$(".YIN-health-bar-text").html("Yin "+this.yinCurHealth)
+		$(".YIN-health-bar-red").animate({
+			'width': this.yinCurHealth + "%"
+		}, 100)
+		$(".YIN-health-bar").animate({
+			'width': this.yinCurHealth + "%"
+		}, 500)
+		$(".YIN-health-bar-blue").animate({
+			'width': this.yinCurHealth + "%"
+		}, 300)
+	}
+}

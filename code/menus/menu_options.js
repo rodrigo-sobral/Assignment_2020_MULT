@@ -35,18 +35,15 @@ function main() {
     backBtn.addEventListener("mouseenter",playSound)
 }
 
-function backMainMenu() { location.replace("../../html/menu_main.html") }
+function backMainMenu() { location.replace("menu_main.html") }
 function playSound() {
     var sound= new Audio("../../resources/sounds/buttonSwitchSound.mp3")
     sound.play()
 }
 
-function volumeUp(ev) {
+function volumeUp(ev) { }
+function volumeDown(ev) { }
 
-}
-function volumeDown(ev) {
-
-}
 function mute(ev) {
     var soundOn1= document.getElementById("soundOn1")
     var soundOn2= document.getElementById("soundOn2")

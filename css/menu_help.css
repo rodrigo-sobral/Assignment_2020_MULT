@@ -1,39 +1,60 @@
-#arrows, #wasd, #shiftLeft, #shiftRight, #esc, h1, p, iframe, button { position: absolute; }
+#arrows, #wasd, #shiftLeft, #shiftRight, #esc,#moveYin,#moveSasha,#shootSasha,#shootYin,#pause, h1, p, iframe, button { position: absolute; }
 iframe{
-    width: 1250px;
-    height: 550px;
+    width: 99%;
+    height: 99%;
     background-image:url("../resources/images/menus/background_lab.png") ;
-    background-size: 45%;
+    background-size: 60%;
+}
+div {
+    position: absolute;
+    border-bottom: 6px inset rgba(0,0,0,.5);
+    border-left: 6px inset rgba(0,0,0,.5);
+    border-right: 6px inset rgba(255,255,255,.5);
+    border-top: 6px inset rgba(255,255,255,.5);
+    border-color: rgb(212, 64, 18);
+    border-radius: 20px;
+    background-color: white;
+    opacity: 0.7;
+    top: 30%;
+    left: 5%;
+    width: 90%;
+    height: 45%;
 }
 
 h1 {
-    font-size: 70px;
+    font-family: arcadeFont;
+    font-size: 5vw;
     left: 5%;
+    top:3%;
 }
-p,h1 { font-family: arcadeFont; }
-p { font-size: x-large; background-color: rgb(146, 146, 146)}
-#arrows, #wasd { left: 15%; }
-#shiftLeft, #shiftRight, #esc { left: 55%; }
-#arrows, #shiftRight { top: 55%; }
-#wasd, #shiftLeft { top: 30%; }
-#esc { top: 10%; }
+p{ font-family: arcadeFont; font-size: 1vw;}
 
-#moveYin, #moveSasha { left: 33%; }
+img, p{position: relative;}
+
+#arrows, #wasd { left: 15%; width: 10%;}
+#shiftLeft, #shiftRight, #esc { left: 55%;}
+#arrows, #shiftRight { top: 60%; }
+#wasd, #shiftLeft { top: 40%; }
+#esc { left: 40%; top: 50%; width: 5%}
+#shiftLeft, #shiftRight{width: 10%}
+
+#moveYin, #moveSasha { left: 15%; }
 #shootYin, #shootSasha{ left: 70%; }
-#moveYin { top: 35%; }
-#shootYin { top: 32%; }
-#moveSasha { top: 60%; }
-#shootSasha { top: 56%; }
-#pause { left: 62%; top: 10%; }
+#moveYin { top: 35%; width: 10%;}
+#shootYin { top: 60%; width: 10%;}
+#moveSasha { top: 56%; width: 15%;}
+#shootSasha { top: 40%; width: 10%;}
+#pause { left: 40%; bottom: 50%; width: 10%;}
 
 button {
     cursor: pointer;
     background-color: rgb(113, 227, 146);
     transition: background-color 0.5s, color 0.5s;
-    height: 70px;
-    width: 70px;
-    top: 80%;
+    height: 10%;
+    width: 8%;
+    top: 82%;
     left: 5%;
+    margin: 2vw;
     border-bottom: 6px inset rgba(0,0,0,.5);
 	border-left: 6px inset rgba(0,0,0,.5);
 	border-right: 6px inset rgba(255,255,255,.5);
@@ -41,8 +62,8 @@ button {
 }
 button:hover {background-color: rgb(73, 162, 105);}
 #backArrow {
-    height: 55px;
-    width: 55px;
+    height: 60%;
+    width: 40%;
 }
 
 @font-face {

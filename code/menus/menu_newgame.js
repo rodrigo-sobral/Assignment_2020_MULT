@@ -16,13 +16,19 @@ function main() {
 
 }
 
-function backMainMenu() { location.replace("../../html/menu_play.html") }
+function backMainMenu() { location.replace("menu_play.html") }
 function startGame() { 
     var input= document.getElementsByTagName("input")[0]
     if (input.value=="") {
         window.alert("First, tell me your name!")
     } else {
-        location.replace("../../html/game.html") 
+        if (confirm("Delete saved data?")) {
+            if (confirm("All the data from the previous game will be deleted and you won't be able to recover it. Are you sure u want to proceed?")) {
+                let new_career = new Carreira(input.value,"11")
+                localStorage.setItem('career', JSON.stringify(new_career));
+                location.replace("game.html")
+            }
+        }
     }
 }
 

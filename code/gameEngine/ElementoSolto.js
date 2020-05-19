@@ -22,11 +22,12 @@ class ElementoSolto extends ElementoFixo {
     }
     
     initSound() {
-        var audio= new Audio("../../resources/sounds/glock_sound.mp3")
+        var audio= new Audio("../resources/sounds/glock_sound.mp3")
         audio.id="sound_bullet"
         return audio
     }
 
+    //  MOVEMENT WITHOUT ANIMATION
     moving(cw, ch) {
         if (this.keyStatus.walkLeft==true) {
             if(this.x>0) this.x-=this.speed

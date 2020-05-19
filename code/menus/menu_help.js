@@ -7,11 +7,11 @@
 function main() {
     var backBtn= document.getElementById("backBtn");
 
-    backBtn.addEventListener("mouseup",muda_menu);
+    backBtn.addEventListener("mouseup",backMenu);
     backBtn.addEventListener("mouseenter",playSound);
 }
 
-function muda_menu() { location.replace("../../html/menu_main.html") }
+function backMenu() { location.replace("menu_main.html") }
 function playSound() {
     var sound= new Audio("../../resources/sounds/buttonSwitchSound.mp3")
     sound.play()

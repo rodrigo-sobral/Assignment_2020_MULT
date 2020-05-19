@@ -5,12 +5,15 @@
 		<title>COVID 20</title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			
+
+		<link rel="stylesheet" href="../css/life_bar.css">
+		<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="../code/gameEngine/Healths.js" defer="true"></script>
+		
 		<script type="text/javascript" src="../code/gameEngine/GameEngine.js" defer="true"></script>
 		<script type="text/javascript" src="../code/gameEngine/Carreira.js" defer="true"></script>
 		<script type="text/javascript" src="../code/gameEngine/ElementoFixo.js" defer="true"></script>
 		<script type="text/javascript" src="../code/gameEngine/ElementoSolto.js" defer="true"></script>
-		<script type="text/javascript" src="../code/gameEngine/BlocoDestrutivel.js" defer="true"></script>
 		<script type="text/javascript" src="../code/gameEngine/Inimigo.js" defer="true"></script>
 		<script type="text/javascript" src="../code/gameEngine/Personagem.js" defer="true"></script>
 		<script type="text/javascript" src="../code/gameEngine/Capitulo.js" defer="true"></script>
@@ -18,6 +21,22 @@
 	</head>
 	
 	<body>
-		<canvas id="canvas" width="1250" height="550" style="display: block; margin: auto; background: #414652"></canvas>
+		<canvas id="canvas" width="1250" height="550" style="background: #414652"></canvas>
+		<div class="container">
+            <div class="area">
+            <div class="row">
+        </div>
+        <div class="SASHA-health-box">
+            <div class="SASHA-health-bar-red"></div>
+            <div class="SASHA-health-bar-blue"></div>
+            <div class="SASHA-health-bar"></div>
+            <div class="SASHA-health-bar-text"></div>
+		</div>
+		<div class="YIN-health-box">
+            <div class="YIN-health-bar-red"></div>
+            <div class="YIN-health-bar-blue"></div>
+            <div class="YIN-health-bar"></div>
+            <div class="YIN-health-bar-text"></div>
+		</div>
 	</body>
 </html>
