@@ -54,10 +54,8 @@ function menuClose() {
 
 function playSound() {
     var sound = new Audio("../../resources/sounds/buttonSwitchSound.mp3")
-    var backgroundMusic = JSON.parse(localStorage.getItem('sound'));
-    sound.volume = backgroundMusic.effectsVolume
-    sound.loop = true
-    sound.autoplay = true
+    var music = JSON.parse(localStorage.getItem('sound'));
+    sound.volume = music.effectsVolume
     sound.play()
 }
 
