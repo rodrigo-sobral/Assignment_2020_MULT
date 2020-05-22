@@ -13,7 +13,7 @@ function main() {
 	var canvas = document.getElementById("canvas")
 	var ctx = canvas.getContext("2d")
 	var heroes, enemies, healths
-	//var level1= new Nivel(1, "training_camp", "../resources/images/maps/Training Camp/level1.png", 2, canvas)
+	var level1= new Nivel(1, "training_camp", "../resources/images/maps/Training Camp/level1.png", 2, canvas)
 	var career = LoadCareer()
 
 	initAllComponents(ctx)
