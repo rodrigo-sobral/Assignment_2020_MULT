@@ -39,7 +39,8 @@ class Healths {
 	}
 
 	applySashaChange() {
-		$(".SASHA-health-bar-text").html("Sasha "+this.sashaCurHealth)
+		if (this.sashaCurHealth!=0) $(".SASHA-health-bar-text").html("Sasha "+this.sashaCurHealth)
+		else $(".SASHA-health-bar-text").html("Sasha DEAD")
 		$(".SASHA-health-bar-red").animate({
 			'width': this.sashaCurHealth + "%"
 		}, 700)
@@ -78,10 +79,12 @@ class Healths {
 	}
 
 	applyYinChange() {
-		$(".YIN-health-bar-text").html("Yin "+this.yinCurHealth)
+		if (this.sashaCurHealth!=0) $(".YIN-health-bar-text").html("Yin "+this.yinCurHealth)
+		else $(".SASHA-health-bar-text").html("Yin DEAD")
+		
 		$(".YIN-health-bar-red").animate({
 			'width': this.yinCurHealth + "%"
-		}, 100)
+		}, 700)
 		$(".YIN-health-bar").animate({
 			'width': this.yinCurHealth + "%"
 		}, 500)

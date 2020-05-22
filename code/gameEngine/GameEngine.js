@@ -7,7 +7,7 @@
 const TOT_HEROES=2
 const ID_SASHA=0, ID_YIN=1
 const BLOCK_SIZE=40
-const MAX_LOOSING_HP=50, MIN_LOOSING_HP=25
+const MAX_LOOSING_HP=50, MIN_LOOSING_HP=20
 
 function main() {
 	var canvas = document.getElementById("canvas")
@@ -164,7 +164,9 @@ function initAllComponents(ctx) {
 }
 
 function drawSprites(ctx, sprites) {
-	for (let i=0; i < sprites.length; i++) sprites[i].draw(ctx);
+	for (let i=0; i < sprites.length; i++) {
+		if (sprites[i]!=undefined) sprites[i].draw(ctx);
+	}
 }
 
 function drawBlocks(ctx, blocks) {
@@ -202,67 +204,95 @@ function renderGame(ctx, heroes, enemies, blocks, healths) {
 	*/
 
 	//	INTERSECTIONS BETWEEN HEROES
-	heroes[ID_SASHA].detectIntersection(heroes[ID_YIN])
-	heroes[ID_YIN].detectIntersection(heroes[ID_SASHA])
-	if (enemies.length!=0) {
-		heroes[ID_SASHA].detectIntersection(enemies[0])
-		heroes[ID_YIN].detectIntersection(enemies[0])
+	if (heroes[ID_YIN]!=undefined && heroes[ID_SASHA]!=undefined) {
+		heroes[ID_SASHA].detectIntersection(heroes[ID_YIN])
+		heroes[ID_YIN].detectIntersection(heroes[ID_SASHA])
+	}
+	//	INTERSECTIONS WITH ENEMIES
+	if (enemies[0]!=undefined) {
+		if (heroes[ID_SASHA]!=undefined) heroes[ID_SASHA].detectIntersection(enemies[0])
+		if (heroes[ID_YIN]!=undefined) heroes[ID_YIN].detectIntersection(enemies[0])
 	}
 
 	//	DRAW BULLETS WHEN FIRING
-	renderBullets(ctx, heroes[ID_SASHA], [heroes[ID_YIN], enemies[0]], healths)
-	renderBullets(ctx, heroes[ID_YIN], [heroes[ID_SASHA], enemies[0]], healths)
-	renderBullets(ctx, enemies[0], heroes, healths)
+	renderBullets(ctx, heroes[ID_SASHA], heroes,  ID_SASHA, enemies, undefined)
+	renderBullets(ctx, heroes[ID_YIN],   heroes,  ID_YIN, 	enemies, undefined)
+	renderBullets(ctx, enemies[0],       enemies, 0, 		heroes,	 healths)
 
 	//	HEROES MOVEMENT
-	heroes[ID_SASHA].moving(cw, ch)
-	heroes[ID_YIN].moving(cw, ch)
-	if (enemies.length!=0)
-		enemies[0].updateAimFollow(heroes[ID_SASHA], heroes[ID_YIN], ctx)
+	if (heroes[ID_SASHA]!=undefined) heroes[ID_SASHA].moving(cw, ch)
+	if (heroes[ID_YIN]!=undefined) heroes[ID_YIN].moving(cw, ch)
+	if (enemies[0]!=undefined) enemies[0].updateAimFollow(heroes, ctx)
 	
 	ctx.clearRect(0, 0, cw, ch)
 	//	DRAW EVERYTING HERE
-	ctx.drawImage(bg, 0, 0, cw, ch)
 	//drawBlocks(ctx, blocks)
+	ctx.drawImage(bg, 0, 0, cw, ch)
+	
 	drawSprites(ctx, heroes)
 	drawSprites(ctx, enemies)
-	drawSprites(ctx, heroes[ID_SASHA].activated_bullets)
-	drawSprites(ctx, heroes[ID_YIN].activated_bullets)
-	if (enemies.length!=0)
-		drawSprites(ctx, enemies[0].activated_bullets)
+	if (heroes[ID_SASHA]!=undefined) drawSprites(ctx, heroes[ID_SASHA].activated_bullets)
+	if (heroes[ID_YIN]!=undefined) drawSprites(ctx, heroes[ID_YIN].activated_bullets)
+	if (enemies[0]!=undefined) drawSprites(ctx, enemies[0].activated_bullets)
 }
 
-function renderBullets(ctx, shooter, shooteds, healths) {
+function renderBullets(ctx, shooter, friendly, own, hostile, healths) {
+	if (shooter==undefined) return
 	let bullets= shooter.activated_bullets
 	let cw=ctx.canvas.width, ch=ctx.canvas.height
+	let moving_flag
+	let intersectsHostile, intersectsFriendly
 	if (bullets.length==0) return
 
 	for (let i=0; i<bullets.length; i++) {
+		moving_flag=false
+		//	CHECK LIMITS OF THE GAME CANVAS
 		if (bullets[i].x>0 && bullets[i].x+bullets[i].width<cw && bullets[i].y>0 && bullets[i].y+bullets[i].height<ch) {
-			for (let shooted = 0; shooted < shooteds.length; shooted++) {
+			for (let sht_host=0, sht_frd=0; sht_host<hostile.length || sht_frd<friendly.length; sht_host++, sht_frd++) {
+				intersectsHostile= intersectsFriendly= false
+				//	CHECK THE BULLETS FIRING
 				if (bullets.length==0 || i==bullets.length) return
-				else if (shooteds[shooted].intersectionWith(bullets[i])==false) {
-					bullets[i].moving(cw, ch)
+
+				if (hostile[sht_host]!=undefined && sht_host<hostile.length) 
+					intersectsHostile= hostile[sht_host].intersectionWith(bullets[i])
+				if (friendly[sht_frd]!=undefined && sht_frd<friendly.length && sht_frd!=own) 
+					intersectsFriendly= friendly[sht_frd].intersectionWith(bullets[i])
+				//	CHECK INTERSECTION WITH ENEMIES OF FRIENDLY HERO
+				if (intersectsHostile==false && intersectsFriendly==false) {
+					if (moving_flag==false) {
+						bullets[i].moving(cw, ch)
+						moving_flag=true
+					}
 				} else {
 					shooter.activated_bullets.splice(i,1)
-					if (Inimigo.prototype.isPrototypeOf(shooter)==true && Personagem.prototype.isPrototypeOf(shooteds[shooted])==true) 
-						shooteds[shooted].health-= Math.floor(Math.random() * (MAX_LOOSING_HP/2 - MIN_LOOSING_HP/5) ) + MIN_LOOSING_HP/5
-						if (shooted==ID_SASHA) healths.damageSasha(shooteds[shooted].FULL_HEALTH-shooteds[shooted].health)
-						else if (shooted==ID_YIN) healths.damageYin(shooteds[shooted].FULL_HEALTH-shooteds[shooted].health)
-					else if (Personagem.prototype.isPrototypeOf(shooter)==true && Inimigo.prototype.isPrototypeOf(shooteds[shooted])==true)
-						shooteds[shooted].health-= Math.floor(Math.random() * (MAX_LOOSING_HP - MIN_LOOSING_HP) ) + MIN_LOOSING_HP
-					
-					//if (shooteds[shooted].health<=0) 
-						//shooteds.splice(shooted,1)
+					if (sht_host<hostile.length) {
+						damageCalculator(shooter, hostile, sht_host, healths)
+					}
 				}
 			}
 		} else shooter.activated_bullets.splice(i,1)
 	}
-	return shooteds
 }
 
-function detectKeyboard(heroes, enemies, ctx) {
-	function keyHandler(ev) { keyUpDownHandler(ev, heroes, enemies, ctx) }
+function damageCalculator(shooter, hostile, sht_host, healths) {
+	let damage
+	if (Inimigo.prototype.isPrototypeOf(shooter)==true && Personagem.prototype.isPrototypeOf(hostile[sht_host])==true) { 
+		damage= Math.floor(Math.random() * (MAX_LOOSING_HP/2 - MIN_LOOSING_HP/2) ) + MIN_LOOSING_HP/2
+		hostile[sht_host].health-= damage
+		if (sht_host==ID_SASHA) healths.damageSasha(damage)
+		else if (sht_host==ID_YIN) healths.damageYin(damage)
+	} else if (Personagem.prototype.isPrototypeOf(shooter)==true && Inimigo.prototype.isPrototypeOf(hostile[sht_host])==true) {
+		damage= Math.floor(Math.random() * (MAX_LOOSING_HP - MIN_LOOSING_HP) ) + MIN_LOOSING_HP
+		hostile[sht_host].health-= damage
+	} if (hostile[sht_host].health<=0) {
+		if (hostile[sht_host].health<0) hostile[sht_host].health=0
+		hostile[sht_host].walkingSound.pause()
+		hostile[sht_host]=undefined
+	}
+}
+
+function detectKeyboard(heroes) {
+	function keyHandler(ev) { keyUpDownHandler(ev, heroes) }
 
 	//	keyboard
 	window.addEventListener("keydown", keyHandler)
@@ -270,29 +300,34 @@ function detectKeyboard(heroes, enemies, ctx) {
 
 }
 
-function keyUpDownHandler(ev, heroes, enemies, ctx) {
+function keyUpDownHandler(ev, heroes) {
 	if (ev.type=="keydown") {
-		if (ev.code=="Escape") location.replace("html/menu_newgame.html")
+		if (ev.code=="Escape") 
+			location.replace("html/menu_newgame.html")
 		// SHOOT YIN
-		else if (ev.code=="ShiftRight" && heroes[ID_YIN].keyStatus.firing==false) heroes[ID_YIN].defineBullet()
+		else if (ev.code=="ShiftRight" && heroes[ID_YIN]!=undefined && heroes[ID_YIN].keyStatus.firing==false) 
+			heroes[ID_YIN].defineBullet()
 		// SHOOT SASHA
-		else if (ev.code=="ShiftLeft" && heroes[ID_SASHA].keyStatus.firing==false) heroes[ID_SASHA].defineBullet()
+		else if (ev.code=="ShiftLeft" && heroes[ID_SASHA]!=undefined && heroes[ID_SASHA].keyStatus.firing==false) 
+			heroes[ID_SASHA].defineBullet()
 		// MOVE YIN
-		else if (ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") 
+		else if ((ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") && heroes[ID_YIN]!=undefined)  
 			heroes[ID_YIN].detect_movement(ev.code)
 		// MOVE SASHA
-		else if (ev.code=="KeyW" || ev.code=="KeyS" || ev.code=="KeyA" || ev.code=="KeyD") 
+		else if ((ev.code=="KeyW" || ev.code=="KeyS" || ev.code=="KeyA" || ev.code=="KeyD") && heroes[ID_SASHA]!=undefined) 
 			heroes[ID_SASHA].detect_movement(ev.code)
 	} else if (ev.type=="keyup") {
 		// STOP SHOOTING YIN
-		if (ev.code=="ShiftRight" && heroes[ID_YIN].keyStatus.firing==true) heroes[ID_YIN].keyStatus.firing=false 
+		if (ev.code=="ShiftRight" && heroes[ID_YIN]!=undefined && heroes[ID_YIN].keyStatus.firing==true) 
+			heroes[ID_YIN].keyStatus.firing=false 
 		// STOP SHOOTING SASHA
-		else if (ev.code=="ShiftLeft" && heroes[ID_SASHA].keyStatus.firing==true) heroes[ID_SASHA].keyStatus.firing=false 
+		else if (ev.code=="ShiftLeft" && heroes[ID_SASHA]!=undefined && heroes[ID_SASHA].keyStatus.firing==true) 
+			heroes[ID_SASHA].keyStatus.firing=false 
 		// PARA YIN
-		else if (ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") 
+		else if ((ev.code=="ArrowUp" || ev.code=="ArrowDown" || ev.code=="ArrowRight" || ev.code=="ArrowLeft") && heroes[ID_YIN]!=undefined) 
 			heroes[ID_YIN].stop(ev.code)
 		// PARA SASHA
-		else if (ev.code=="KeyW" || ev.code=="KeyS" || ev.code=="KeyA" || ev.code=="KeyD") 
+		else if ((ev.code=="KeyW" || ev.code=="KeyS" || ev.code=="KeyA" || ev.code=="KeyD") && heroes[ID_SASHA]!=undefined) 
 			heroes[ID_SASHA].stop(ev.code)
 	}
 }

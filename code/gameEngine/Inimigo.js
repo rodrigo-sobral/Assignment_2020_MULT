@@ -5,7 +5,7 @@ class Inimigo extends ElementoSolto {
     ID_LEFT=0; ID_RIGHT=1; ID_UP=2; ID_DOWN=3
     FULL_HEALTH= 100
     //  BULLETS CONSTANTS
-    BULLET_WIDTH=10; BULLET_HEIGHT=13; BULLET_SPEED=3; BULLET_WAITING_TIME=20
+    BULLET_WIDTH=10; BULLET_HEIGHT=13; BULLET_SPEED=3.5; BULLET_WAITING_TIME=20
     //  ENEMIES AI CONSTANTS
     SHOOTING_RANGE=125; FOLLOW_RANGE=150
     BULLET_LOADING_TIME=50; TIME_COUNTER=50
@@ -18,7 +18,7 @@ class Inimigo extends ElementoSolto {
 
         this.walkingSound= new Audio("../../resources/sounds/walkingSound.mp3")
         this.walkingSound.loop=true
-        this.walkingSound.volume=0.3
+        this.walkingSound.volume=0.4
 
         this.health= this.FULL_HEALTH
     }
@@ -26,19 +26,26 @@ class Inimigo extends ElementoSolto {
     //  ==========================================
     //  ENEMIES AI
     //  ==========================================
-    updateAimFollow(hero1, hero2, ctx) {
-		var distanceHero1X = hero1.x - this.x
-        var distanceHero1Y = hero1.y - this.y
-        var distanceHero2X = hero2.x - this.x
-        var distanceHero2Y = hero2.y - this.y
-        var distanceHero1= Math.sqrt(Math.pow(distanceHero1X,2)+Math.pow(distanceHero1Y,2))
-        var distanceHero2= Math.sqrt(Math.pow(distanceHero2X,2)+Math.pow(distanceHero2Y,2))
-        if (distanceHero1<distanceHero2) {
+    updateAimFollow(heroes, ctx) {
+        if (heroes[ID_SASHA]==undefined && heroes[ID_YIN]==undefined) return
+
+        if (heroes[ID_SASHA]!=undefined) {
+            var distanceHero1X = heroes[ID_SASHA].x - this.x
+            var distanceHero1Y = heroes[ID_SASHA].y - this.y
+            var distanceHero1= Math.sqrt(Math.pow(distanceHero1X,2)+Math.pow(distanceHero1Y,2))
+        } else var distanceHero1=undefined
+        if (heroes[ID_YIN]!=undefined) {
+            var distanceHero2X = heroes[ID_YIN].x - this.x
+            var distanceHero2Y = heroes[ID_YIN].y - this.y
+            var distanceHero2= Math.sqrt(Math.pow(distanceHero2X,2)+Math.pow(distanceHero2Y,2))
+        } else var distanceHero2= undefined
+        
+        if (distanceHero2==undefined || distanceHero1<distanceHero2) {
             var aimAngle = Math.atan2(distanceHero1Y,distanceHero1X) / Math.PI * 180
-            this.defineDirection(distanceHero1, aimAngle, ctx, [hero1, hero2])
-        } else if (distanceHero1>distanceHero2) {
+            this.defineDirection(distanceHero1, aimAngle, ctx, [heroes[ID_SASHA], heroes[ID_YIN]])
+        } else if (distanceHero1==undefined && distanceHero1>distanceHero2) {
             var aimAngle = Math.atan2(distanceHero2Y,distanceHero2X) / Math.PI * 180
-            this.defineDirection(distanceHero2, aimAngle, ctx, [hero1, hero2])
+            this.defineDirection(distanceHero2, aimAngle, ctx, [heroes[ID_SASHA], heroes[ID_YIN]])
         }
 	}
     
@@ -58,7 +65,7 @@ class Inimigo extends ElementoSolto {
             else if (aimAngle>=-155 && aimAngle<=-115) { this.keyStatus.walkLeft=true; this.keyStatus.walkUp=true }
             else if ((aimAngle>155 && aimAngle<=180) || (aimAngle>=-180 && aimAngle<-155)) { this.keyStatus.walkLeft=true }
             for (let sprite = 0; sprite < otherSprites.length; sprite++) {
-                if (this.detectIntersection(otherSprites[sprite])!=false) return
+                if (otherSprites[sprite]!=undefined && this.detectIntersection(otherSprites[sprite])!=false) return
             }
             this.moving(ctx.canvas.width, ctx.canvas.height)
         } else {

@@ -4,7 +4,6 @@ class Personagem extends Inimigo {
     
     constructor(x, y, width, height, speed) {
         super(x, y, width, height, speed)
-        this.arma=false
     }
 
     detect_movement(code) {
