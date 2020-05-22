@@ -1,13 +1,8 @@
 "use strict"
 
 class Sound {
-    constructor(path, volume,effectsVolume) {
-        this.path = path
+    constructor(volume,effectsVolume) {
         this.volume = volume
         this.effectsVolume = effectsVolume
-    }
-
-    saveSound() {
-        localStorage.setItem('sound', JSON.stringify(this));
     }
 }

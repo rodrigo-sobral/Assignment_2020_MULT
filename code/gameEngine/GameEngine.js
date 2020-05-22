@@ -16,6 +16,8 @@ function main() {
 	var career = LoadCareer()
 	var level1= new Nivel(1, "training_camp", "../resources/images/maps/Training Camp/level1.png", canvas, ctx)
 
+	playBackgroundMusic()
+
 	initAllComponents(ctx)
 	canvas.addEventListener("initend", initEndHandler)
 
@@ -42,6 +44,20 @@ function main() {
 function LoadCareer() {
 	let career = JSON.parse(localStorage.getItem('career'));
 	return career
+}
+
+function playBackgroundMusic() {
+	if (localStorage.getItem('sound') === null) {
+		var backgroundMusic = new Sound(1, 1)
+		localStorage.setItem('sound', JSON.stringify(backgroundMusic));
+	} else {
+		var backgroundMusic = JSON.parse(localStorage.getItem('sound'));
+	}
+	var sound = new Audio("../../resources/sounds/menuBackgroundMusic.mp3")
+	sound.volume = backgroundMusic.volume
+	sound.loop = true
+	sound.autoplay = true
+	sound.play()
 }
 
 function initAllComponents(ctx) {

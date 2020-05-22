@@ -32,9 +32,6 @@ function menuPlay() {
     location.replace("menu_play.html")
 }
 
-function menuRanking() {
-    location.replace("menu_rankings.html")
-}
 
 function menuOptions() {
     location.replace("menu_options.html")
@@ -60,13 +57,14 @@ function playSound() {
 }
 
 function playBackgroundMusic() {
+    localStorage.removeItem("sound")
     if (localStorage.getItem('sound') === null) {
-        var backgroundMusic = new Sound("../../resources/sounds/menuBackgroundMusic.mp3", 1, 1)
+        var backgroundMusic = new Sound(1, 1)
         localStorage.setItem('sound', JSON.stringify(backgroundMusic));
     } else {
         var backgroundMusic = JSON.parse(localStorage.getItem('sound'));
     }
-    var sound = new Audio(backgroundMusic.path)
+    var sound = new Audio("../../resources/sounds/menuBackgroundMusic.mp3")
     sound.volume = backgroundMusic.volume
     sound.loop = true
     sound.autoplay = true

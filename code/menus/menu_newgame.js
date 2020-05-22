@@ -8,6 +8,8 @@ function main() {
     var playBtn= document.getElementById("playBtn");
     var backBtn= document.getElementById("backBtn");
 
+    playBackgroundMusic()
+
     playBtn.addEventListener("mouseup", startGame)
     backBtn.addEventListener("mouseup",backMainMenu);
     
@@ -33,6 +35,22 @@ function startGame() {
 }
 
 function playSound() {
-    var sound= new Audio("../../resources/sounds/buttonSwitchSound.mp3")
+    var sound = new Audio("../../resources/sounds/buttonSwitchSound.mp3")
+    var music = JSON.parse(localStorage.getItem('sound'));
+    sound.volume = music.effectsVolume
+    sound.play()
+}
+
+function playBackgroundMusic() {
+    if (localStorage.getItem('sound') === null) {
+        var backgroundMusic = new Sound(1, 1)
+        localStorage.setItem('sound', JSON.stringify(backgroundMusic));
+    } else {
+        var backgroundMusic = JSON.parse(localStorage.getItem('sound'));
+    }
+    var sound = new Audio("../../resources/sounds/menuBackgroundMusic.mp3")
+    sound.volume = backgroundMusic.volume
+    sound.loop = true
+    sound.autoplay = true
     sound.play()
 }

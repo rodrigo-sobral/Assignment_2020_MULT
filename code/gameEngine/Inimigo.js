@@ -216,6 +216,8 @@ class Inimigo extends ElementoSolto {
         }
         this.activated_bullets.push(shooted_bullet)
         this.keyStatus.firing=true
+        var music = JSON.parse(localStorage.getItem('sound'));
+        shooted_bullet.sound_bullet.volume = music.effectsVolume
         shooted_bullet.sound_bullet.play()
     }   
     searchDirection(direction) {
