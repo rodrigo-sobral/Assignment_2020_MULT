@@ -8,6 +8,5 @@ class Carreira {
 
     saveCareer() {
         localStorage.setItem('career', JSON.stringify(this));
-        localStorage.setItem('level', '00');
     }
 }
