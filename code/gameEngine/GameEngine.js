@@ -13,8 +13,8 @@ function main() {
 	var canvas = document.getElementById("canvas")
 	var ctx = canvas.getContext("2d")
 	var heroes, enemies, healths
-	var level1= new Nivel(1, "training_camp", "../resources/images/maps/Training Camp/level1.png", 2, canvas)
 	var career = LoadCareer()
+	var level1= new Nivel(1, "training_camp", "../resources/images/maps/Training Camp/level1.png", canvas, ctx)
 
 	initAllComponents(ctx)
 	canvas.addEventListener("initend", initEndHandler)
@@ -182,9 +182,9 @@ function animLoop(ctx, heroes, enemies, blocks, healths) {
 	renderGame(ctx, heroes, enemies, blocks, healths)
 }
 
-var bg= new Image()
-bg.id="bg"
-bg.src="../resources/images/maps/Training Camp/level1.png"
+//var bg= new Image()
+//bg.id="bg"
+//bg.src="../resources/images/maps/Training Camp/level1.png"
 function renderGame(ctx, heroes, enemies, blocks, healths) {
 	let ch= ctx.canvas.height
 	let cw= ctx.canvas.width
@@ -227,7 +227,7 @@ function renderGame(ctx, heroes, enemies, blocks, healths) {
 	ctx.clearRect(0, 0, cw, ch)
 	//	DRAW EVERYTING HERE
 	//drawBlocks(ctx, blocks)
-	ctx.drawImage(bg, 0, 0, cw, ch)
+	//ctx.drawImage(bg, 0, 0, cw, ch)
 	
 	drawSprites(ctx, heroes)
 	drawSprites(ctx, enemies)

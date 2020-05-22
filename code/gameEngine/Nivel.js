@@ -1,88 +1,88 @@
 "use strict"
 
 class Nivel {
-    constructor(id, chapter, backgroundPath, tot_sprites,canvas) {
+    constructor(id, chapter, backgroundPath, canvas, ctx) {
         this.id=id
         this.chapter=chapter
         this.backgroundLevel= new Image()
+        
         this.fixedBlocksMatrix= this.initMatrix()
-        this.hardBlockArray = new Array(this.fixedBlocksMatrix.length)
-        this.loadLevel(tot_sprites, backgroundPath)
-        canvas.addEventListener("initend", this.initEndHandler)
+        //this.hardBlockArray = new Array(this.fixedBlocksMatrix.length)
+
+        this.loadLevel(backgroundPath, ctx)
+        canvas.addEventListener("blocksEnd", initEndHandler)
+
+        function initEndHandler(ev) {
+            console.log(ev)
+            //var auxHardBlockArray= ev.auxHardBlockArray
+        }
     }
 
-    initEndHandler(ev) {
-        console.log("Everything loaded")
+    blockCounter() {
+        let tot_sprites=0
+        for(let i=0; i<this.fixedBlocksMatrix.length; i++){
+            for(let j=0; j<this.fixedBlocksMatrix[i].length; j++){
+                if(this.fixedBlocksMatrix[i][j]!=0) tot_sprites++ 
+            }
+        }
+        return tot_sprites
     }
 
     //  ==initAllComponens()
-    loadLevel(tot_sprites, backgroundPath){
-        this.nLoad = 0
+    loadLevel(backgroundPath, ctx) {
         this.backgroundLevel.id="bg"
         this.backgroundLevel.src= backgroundPath
+
+        var nLoad = 0
+        var auxHardBlockArray= new Array(this.fixedBlocksMatrix.length)
+        var tot_sprites= this.blockCounter()
         
         for(let i=0;i<this.fixedBlocksMatrix.length;i++){
-            this.hardBlockArray[i]=new Array(this.fixedBlocksMatrix[i].length).fill(0)
+            //this.hardBlockArray[i]=new Array(this.fixedBlocksMatrix[i].length).fill(0)
+            auxHardBlockArray[i]= new Array(this.fixedBlocksMatrix[i].length).fill(0)
             for(let j=0;j<this.fixedBlocksMatrix[i].length;j++){
                 if(this.fixedBlocksMatrix[i][j]!=0){
-                    this.initBlock(i, j, tot_sprites)
+                    var aux= new Image()
+                    aux.id= "bloco"
+                    aux.src="../../resources/images/maps/sprites/uniqueTiles/tile_"+this.chapter+this.fixedBlocksMatrix[i][j]+".png"
+                    aux.addEventListener("load", loadBlock(aux, i, j))
                 }
             }
         }
-        return this.hardBlockArray
-    }
-
-    //  initOneComponent()
-    initBlock(i, j, tot_sprites) {
-        var aux= new Image()
-        aux.id= "bloco"
-        aux.src="../../resources/images/maps/sprites/uniqueTiles/tile_"+this.chapter+this.fixedBlocksMatrix[i][j]+".png"
-        aux.addEventListener("load", loadBlock)
-        
-		//  ==imgLoadedHandler()
-        function loadBlock(ev) {
-            var img = ev.target
+        function loadBlock(aux, i, j) {
+            var img = aux
             var hardBlock= new ElementoFixo(32*i, 32*j, 32, 32, img)
-            this.hardBlockArray[i][j]=hardBlock
-            this.nLoad++	
+            auxHardBlockArray[i][j]=hardBlock
+            nLoad++	
 
-            if (this.nLoad == tot_sprites) {
-                var ev2 = new Event("initend");
-                ctx.canvas.dispatchEvent(ev2);
-            }
-        }
-    }
-
-    drawBlocks(ctx){
-        for(let i=0;i<this.hardBlockArray.length;i++){
-            for(let j=0;j<this.hardBlockArray[i].length;j++){
-                if(this.fixedBlocksMatrix[i][j]!=0){
-                    this.hardBlockArray[i][j].draw(ctx)
-                }
+            if (nLoad == tot_sprites) {
+                var ev2 = new Event("blocksEnd")
+                ev2.auxHardBlockArray= auxHardBlockArray
+                console.log(ev2)
+                ctx.canvas.dispatchEvent(ev2)
             }
         }
     }
 
     initMatrix() {
         if (this.id==1 && this.chapter=="training_camp") {
-            var matrix = [ [0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+            return [ [8, 23, 17, 0, 0, 0, 0, 0, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 17, 17, 0, 17, 0, 17, 7],
+            [13, 0, 0, 15, 0, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 21, 0, 3],
+            [13, 0, 0, 15, 20, 0, 0, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 21, 21, 21, 0, 0, 0, 0, 0, 0,18, 0, 0, 0, 0, 0, 0, 3],
+            [13, 0, 15, 15, 0, 0, 0, 0, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 21, 0, 0, 0, 20, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 3],
+            [13, 0, 15, 15, 0, 0, 0, 0, 15, 0, 15, 0, 0, 0, 0, 0, 0, 0, 21, 21, 19, 21, 0, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 3],
+            [13, 0, 0, 15, 15, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 18, 0, 0, 0, 0, 0, 0, 0, 0, 3],
+            [13, 0, 0, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 3],
+            [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0 , 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
+            [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
+            [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 14, 14, 14, 14, 14, 14, 14, 0, 3],
+            [13, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 27, 25, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 3],
+            [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 3],
+            [13, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 14, 14, 14, 14, 14, 14, 0, 0, 14, 0, 3],
+            [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,15 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 3],
+            [13, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 19, 0, 0, 0, 0, 0, 0, 0, 15, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 3],
+            [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 15, 15, 0, 15, 0, 0, 0, 14, 14, 14, 14, 14, 14,14, 14, 14, 14, 0, 3],
+            [9, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3]]
         }
-        return matrix
     }
 }
