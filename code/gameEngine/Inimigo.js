@@ -12,7 +12,7 @@ class Inimigo extends ElementoSolto {
     constructor(x, y, width, height, speed) {
         super(x, y, width, height, speed)
         this.walking_sprites= [ [], [], [], [] ]
-        this.stopped_sprites= new Array()
+        this.stopped_sprites= [0, 0, 0, 0]
         this.bullets= new Array()
         this.activated_bullets= new Array()
 

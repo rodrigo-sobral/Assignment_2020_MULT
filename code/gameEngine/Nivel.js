@@ -7,17 +7,15 @@ class Nivel {
         this.backgroundLevel= new Image()
         
         this.fixedBlocksMatrix= this.initMatrix()
-        //this.hardBlockArray = new Array(this.fixedBlocksMatrix.length)
 
-        this.loadLevel(backgroundPath, ctx)
+        var auxHardBlockArray
         canvas.addEventListener("blocksEnd", initEndHandler)
+        this.loadLevel(backgroundPath, ctx)
+        function initEndHandler(ev) { auxHardBlockArray= ev.auxHardBlockArray }
 
-        function initEndHandler(ev) {
-            console.log(ev)
-            //var auxHardBlockArray= ev.auxHardBlockArray
-        }
+        this.hardBlockArray= auxHardBlockArray
     }
-
+    
     blockCounter() {
         let tot_sprites=0
         for(let i=0; i<this.fixedBlocksMatrix.length; i++){
@@ -38,7 +36,6 @@ class Nivel {
         var tot_sprites= this.blockCounter()
         
         for(let i=0;i<this.fixedBlocksMatrix.length;i++){
-            //this.hardBlockArray[i]=new Array(this.fixedBlocksMatrix[i].length).fill(0)
             auxHardBlockArray[i]= new Array(this.fixedBlocksMatrix[i].length).fill(0)
             for(let j=0;j<this.fixedBlocksMatrix[i].length;j++){
                 if(this.fixedBlocksMatrix[i][j]!=0){
@@ -51,14 +48,13 @@ class Nivel {
         }
         function loadBlock(aux, i, j) {
             var img = aux
-            var hardBlock= new ElementoFixo(32*i, 32*j, 32, 32, img)
+            var hardBlock= new ElementoFixo(BLOCK_SIZE*j, BLOCK_SIZE*i, BLOCK_SIZE, BLOCK_SIZE, img)
             auxHardBlockArray[i][j]=hardBlock
             nLoad++	
 
             if (nLoad == tot_sprites) {
                 var ev2 = new Event("blocksEnd")
                 ev2.auxHardBlockArray= auxHardBlockArray
-                console.log(ev2)
                 ctx.canvas.dispatchEvent(ev2)
             }
         }

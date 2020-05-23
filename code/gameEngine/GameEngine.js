@@ -6,7 +6,8 @@
 
 const TOT_HEROES=2
 const ID_SASHA=0, ID_YIN=1
-const BLOCK_SIZE=40
+const BLOCK_SIZE=32
+const CHARACTER_SIZE=40
 const MAX_LOOSING_HP=50, MIN_LOOSING_HP=20
 
 function main() {
@@ -26,18 +27,19 @@ function main() {
 		enemies= ev.enemies
 		healths= ev.healths
 
-		heroes[ID_SASHA].img=heroes[ID_SASHA].stopped_sprites[0]
-		heroes[ID_YIN].img=heroes[ID_YIN].stopped_sprites[0]
-		heroes[ID_SASHA].imgData=heroes[ID_SASHA].getImageData("stopLeft")
-		heroes[ID_YIN].imgData=heroes[ID_YIN].getImageData("stopLeft")
+		heroes[ID_SASHA].img=heroes[ID_SASHA].stopped_sprites[1]
+		heroes[ID_YIN].img=heroes[ID_YIN].stopped_sprites[1]
+		heroes[ID_SASHA].imgData=heroes[ID_SASHA].getImageData()
+		heroes[ID_YIN].imgData=heroes[ID_YIN].getImageData()
 
 		enemies[0].img=enemies[0].stopped_sprites[3]
 		enemies[0].imgData=enemies[0].getImageData()
-
-		//drawBlocks(ctx, blocks)
+		
+		ctx.drawImage(level1.backgroundLevel, 0, 0, ctx.canvas.width, ctx.canvas.height)
+		drawBlocks(ctx, level1.hardBlockArray)
 		drawSprites(ctx, enemies)
 		drawSprites(ctx, heroes)
-		animLoop(ctx, heroes, enemies, undefined, healths)
+		animLoop(ctx, heroes, enemies, level1, healths)
 	}
 }
 
@@ -64,14 +66,14 @@ function initAllComponents(ctx) {
 	var ids=["Left", "Right", "Up", "Down"]
 	var enemies = new Array(1)
 	var heroes = new Array(TOT_HEROES)
-	heroes[ID_SASHA] = new Personagem(100, 100, BLOCK_SIZE, BLOCK_SIZE, 2)
-	heroes[ID_YIN]= new Personagem(50, 50, BLOCK_SIZE, BLOCK_SIZE, 2)
-	enemies[0]= new Inimigo(300, 200, BLOCK_SIZE, BLOCK_SIZE, 1)
+	heroes[ID_SASHA] = new Personagem(100, 360, CHARACTER_SIZE, CHARACTER_SIZE, 2)
+	heroes[ID_YIN]= new Personagem(50, 400, CHARACTER_SIZE, CHARACTER_SIZE, 2)
+	enemies[0]= new Inimigo(400, 100, CHARACTER_SIZE, CHARACTER_SIZE, 1)
 	var sashaSprite, yinSprite, auxYin, auxSasha, bullet_sprite
 	var enemieSprite, auxEnemie
 	var nLoad = 0
 	//	enemies + bullets + posiçoes paradas + posiçoes caminhando
-	var totLoad= enemies.length + 8 + 8 + 16
+	var totLoad= enemies.length*12 + 8 + 2*12
 
 	// LOAD STOPPED HEROES
 	for (let i=0; i<4; i++) {
@@ -108,7 +110,7 @@ function initAllComponents(ctx) {
 	//	STOPPED AGENT
 	for (let i=0; i<4; i++) {
 		enemieSprite= new Image()
-		enemieSprite.id= "enemieSprite"
+		enemieSprite.id= "enemie"+ids[i]
 		enemieSprite.src= "../resources/images/enemies/agent_"+ids[i]+"1.png"
 		enemieSprite.addEventListener("load", imgLoadedHandler)
 	}
@@ -145,23 +147,41 @@ function initAllComponents(ctx) {
 	function imgLoadedHandler(ev) {
 		var img = ev.target
 		if (img.id.includes("sasha")==true) {
-			if (img.src.includes("1.png")) heroes[ID_SASHA].stopped_sprites.push(img)
-			else if (img.id.includes(ids[0])) heroes[ID_SASHA].walking_sprites[0].push(img)
-			else if (img.id.includes(ids[1])) heroes[ID_SASHA].walking_sprites[1].push(img)
-			else if (img.id.includes(ids[2])) heroes[ID_SASHA].walking_sprites[2].push(img)
-			else if (img.id.includes(ids[3])) heroes[ID_SASHA].walking_sprites[3].push(img)
+			if (img.src.includes("1.png")) {
+				if (img.id.includes(ids[0])) heroes[ID_SASHA].stopped_sprites[0]=img
+				else if (img.id.includes(ids[1])) heroes[ID_SASHA].stopped_sprites[1]=img
+				else if (img.id.includes(ids[2])) heroes[ID_SASHA].stopped_sprites[2]=img
+				else if (img.id.includes(ids[3])) heroes[ID_SASHA].stopped_sprites[3]=img
+			} else {
+				if (img.id.includes(ids[0])) heroes[ID_SASHA].walking_sprites[0].push(img)
+				else if (img.id.includes(ids[1])) heroes[ID_SASHA].walking_sprites[1].push(img)
+				else if (img.id.includes(ids[2])) heroes[ID_SASHA].walking_sprites[2].push(img)
+				else if (img.id.includes(ids[3])) heroes[ID_SASHA].walking_sprites[3].push(img)
+			}
 		} else if (img.id.includes("yin")==true) {
-			if (img.src.includes("1.png")) heroes[ID_YIN].stopped_sprites.push(img)
-			else if (img.id.includes(ids[0])) heroes[ID_YIN].walking_sprites[0].push(img)
-			else if (img.id.includes(ids[1])) heroes[ID_YIN].walking_sprites[1].push(img)
-			else if (img.id.includes(ids[2])) heroes[ID_YIN].walking_sprites[2].push(img)
-			else if (img.id.includes(ids[3])) heroes[ID_YIN].walking_sprites[3].push(img)
+			if (img.src.includes("1.png")) {
+				if (img.id.includes(ids[0])) heroes[ID_YIN].stopped_sprites[0]=img
+				else if (img.id.includes(ids[1])) heroes[ID_YIN].stopped_sprites[1]=img
+				else if (img.id.includes(ids[2])) heroes[ID_YIN].stopped_sprites[2]=img
+				else if (img.id.includes(ids[3])) heroes[ID_YIN].stopped_sprites[3]=img
+			} else {
+				if (img.id.includes(ids[0])) heroes[ID_YIN].walking_sprites[0].push(img)
+				else if (img.id.includes(ids[1])) heroes[ID_YIN].walking_sprites[1].push(img)
+				else if (img.id.includes(ids[2])) heroes[ID_YIN].walking_sprites[2].push(img)
+				else if (img.id.includes(ids[3])) heroes[ID_YIN].walking_sprites[3].push(img)
+			}
 		} else if (img.id.includes("enemie")==true) {
-			if (img.src.includes("1.png")) enemies[0].stopped_sprites.push(img)
-			else if (img.id.includes(ids[0])) enemies[0].walking_sprites[0].push(img)
-			else if (img.id.includes(ids[1])) enemies[0].walking_sprites[1].push(img)
-			else if (img.id.includes(ids[2])) enemies[0].walking_sprites[2].push(img)
-			else if (img.id.includes(ids[3])) enemies[0].walking_sprites[3].push(img)
+			if (img.src.includes("1.png")) {
+				if (img.id.includes(ids[0]))enemies[0].stopped_sprites[0]=img
+				else if (img.id.includes(ids[1]))enemies[0].stopped_sprites[1]=img
+				else if (img.id.includes(ids[2]))enemies[0].stopped_sprites[2]=img
+				else if (img.id.includes(ids[3]))enemies[0].stopped_sprites[3]=img
+			} else {
+				if (img.id.includes(ids[0]))enemies[0].walking_sprites[0].push(img)
+				else if (img.id.includes(ids[1]))enemies[0].walking_sprites[1].push(img)
+				else if (img.id.includes(ids[2]))enemies[0].walking_sprites[2].push(img)
+				else if (img.id.includes(ids[3]))enemies[0].walking_sprites[3].push(img)
+			}
 		} else if (img.id.includes("bullet")==true) {
 			heroes[ID_SASHA].bullets.push(img)
 			heroes[ID_YIN].bullets.push(img)
@@ -187,37 +207,28 @@ function drawSprites(ctx, sprites) {
 
 function drawBlocks(ctx, blocks) {
 	for (let i=0; i < blocks.length; i++) {
-		for (let j = 0; j<blocks[i].length; j++) blocks[i][j].draw(ctx);
+		for (let j = 0; j<blocks[i].length; j++) {
+			if (blocks[i][j]!=0) blocks[i][j].draw(ctx);
+		}
 	}
 }
 
-function animLoop(ctx, heroes, enemies, blocks, healths) {
-	var al = function() { animLoop(ctx, heroes, enemies, blocks, healths) }
+function animLoop(ctx, heroes, enemies, level, healths) {
+	var al = function() { animLoop(ctx, heroes, enemies, level, healths) }
 	window.requestAnimationFrame(al)
 	
-	renderGame(ctx, heroes, enemies, blocks, healths)
+	renderGame(ctx, heroes, enemies, level, healths)
 }
 
-//var bg= new Image()
-//bg.id="bg"
-//bg.src="../resources/images/maps/Training Camp/level1.png"
-function renderGame(ctx, heroes, enemies, blocks, healths) {
+function renderGame(ctx, heroes, enemies, level, healths) {
 	let ch= ctx.canvas.height
 	let cw= ctx.canvas.width
+	let blocks= level.hardBlockArray
 	
 	detectKeyboard(heroes, enemies, ctx)
 
 	//	INTERSECTIONS WITH BLOCKS
-	/*
-	heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32)][Math.floor(heroes[ID_SASHA].y/32-1)])
-	heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32)][Math.floor(heroes[ID_SASHA].y/32+1)])
-	heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32-1)][Math.floor(heroes[ID_SASHA].y/32)])
-	heroes[ID_SASHA].detectIntersection(blocks[Math.floor(heroes[ID_SASHA].x/32+1)][Math.floor(heroes[ID_SASHA].y/32)])
-	heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32)][Math.floor(heroes[ID_YIN].y/32-1)])
-	heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32)][Math.floor(heroes[ID_YIN].y/32+1)])
-	heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32-1)][Math.floor(heroes[ID_YIN].y/32)])
-	heroes[ID_YIN].detectIntersection(blocks[Math.floor(heroes[ID_YIN].x/32+1)][Math.floor(heroes[ID_YIN].y/32)])
-	*/
+	allBlockColisions(heroes[ID_SASHA], blocks)
 
 	//	INTERSECTIONS BETWEEN HEROES
 	if (heroes[ID_YIN]!=undefined && heroes[ID_SASHA]!=undefined) {
@@ -231,22 +242,27 @@ function renderGame(ctx, heroes, enemies, blocks, healths) {
 	}
 
 	//	DRAW BULLETS WHEN FIRING
-	renderBullets(ctx, heroes[ID_SASHA], heroes,  ID_SASHA, enemies, undefined)
-	renderBullets(ctx, heroes[ID_YIN],   heroes,  ID_YIN, 	enemies, undefined)
-	renderBullets(ctx, enemies[0],       enemies, 0, 		heroes,	 healths)
+	renderBullets(ctx, heroes[ID_SASHA], heroes, ID_SASHA, enemies, undefined)
+	renderBullets(ctx, heroes[ID_YIN], heroes, ID_YIN, enemies, undefined)
+	renderBullets(ctx, enemies[0], enemies, 0, heroes, healths)
 
 	//	HEROES MOVEMENT
 	if (heroes[ID_SASHA]!=undefined) heroes[ID_SASHA].moving(cw, ch)
 	if (heroes[ID_YIN]!=undefined) heroes[ID_YIN].moving(cw, ch)
 	if (enemies[0]!=undefined) enemies[0].updateAimFollow(heroes, ctx)
 	
+
 	ctx.clearRect(0, 0, cw, ch)
+	//	=====================
 	//	DRAW EVERYTING HERE
-	//drawBlocks(ctx, blocks)
-	//ctx.drawImage(bg, 0, 0, cw, ch)
-	
+	//	=====================
+	//	DRAW MAP
+	ctx.drawImage(level.backgroundLevel, 0, 0, cw, ch)
+	drawBlocks(ctx, blocks)
+	//	DRAW CHARACTERES
 	drawSprites(ctx, heroes)
 	drawSprites(ctx, enemies)
+	//	DRAW BULLETS
 	if (heroes[ID_SASHA]!=undefined) drawSprites(ctx, heroes[ID_SASHA].activated_bullets)
 	if (heroes[ID_YIN]!=undefined) drawSprites(ctx, heroes[ID_YIN].activated_bullets)
 	if (enemies[0]!=undefined) drawSprites(ctx, enemies[0].activated_bullets)
@@ -345,5 +361,15 @@ function keyUpDownHandler(ev, heroes) {
 		// PARA SASHA
 		else if ((ev.code=="KeyW" || ev.code=="KeyS" || ev.code=="KeyA" || ev.code=="KeyD") && heroes[ID_SASHA]!=undefined) 
 			heroes[ID_SASHA].stop(ev.code)
+	}
+}
+
+function allBlockColisions(character, block_matrix) {
+	for (let i = 0; i < block_matrix.length; i++) {
+		for (let j = 0; j < block_matrix[i].length; j++) {
+			if (block_matrix[i][j]!=0) {
+				character.detectIntersection(block_matrix[i][j])
+			}
+		}		
 	}
 }

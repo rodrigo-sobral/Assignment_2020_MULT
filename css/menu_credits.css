@@ -22,9 +22,8 @@ h2 {
 h3 {
     position: relative;
     font-family: arcadeFont;
-    left: 20%;
-    down: 40%;
-    font-size: 1vw;
+    left: 22%;
+    font-size: 1.1vw;
 }
 
 div, #fotoDei, button {
@@ -48,7 +47,7 @@ div, #fotoDei { border-color: rgb(212, 64, 18); border-radius: 20px; }
     top: 60%;
     left: 75%;
     width: 20%;
-    height: 20%;
+    height: 25%;
 }
 
 p {
@@ -66,16 +65,16 @@ p {
 }
 
 #fotoDei{
-    width: 15%;
-    height: 22%;
-    top: 30%;
+    width: 20%;
+    height: 30%;
+    top: 25%;
     left: 75%;
 }
 #cup {
     width: 7%;
-    height: 9%;
+    height: 13%;
     top: 43%;
-    left: 80%;
+    left: 82%;
 }
 
 button {

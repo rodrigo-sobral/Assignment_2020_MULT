@@ -57,7 +57,6 @@ function playSound() {
 }
 
 function playBackgroundMusic() {
-    localStorage.removeItem("sound")
     if (localStorage.getItem('sound') === null) {
         var backgroundMusic = new Sound(1, 1)
         localStorage.setItem('sound', JSON.stringify(backgroundMusic));
