@@ -27,10 +27,10 @@ class Healths {
 			this.applySashaChange()
 		}
 	}
-	healSasha(heal) {
+	healSasha() {
 		if (this.sashaCurHealth != this.sashaFullHealth) {
 			$(".SASHA-health-bar-red, .SASHA-health-bar-blue, .SASHA-health-bar").stop()
-			this.sashaCurHealth = this.sashaCurHealth + heal
+			this.sashaCurHealth = this.sashaFullHealth
 			if (this.sashaCurHealth > this.sashaFullHealth) {
 				this.sashaCurHealth = this.sashaFullHealth
 			}
@@ -67,10 +67,10 @@ class Healths {
 			this.applyYinChange()
 		}
 	}
-	healYin(heal) {
+	healYin() {
 		if (this.yinCurHealth != this.yinFullHealth) {
 			$(".YIN-health-bar-red, .YIN-health-bar-blue, .YIN-health-bar").stop()
-			this.yinCurHealth = this.yinCurHealth + heal
+			this.yinCurHealth = this.yinFullHealth
 			if (this.yinCurHealth > this.yinFullHealth) {
 				this.yinCurHealth = this.yinFullHealth
 			}

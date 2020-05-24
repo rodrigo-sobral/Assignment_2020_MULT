@@ -42,10 +42,10 @@ class Inimigo extends ElementoSolto {
         
         if (distanceHero2==undefined || distanceHero1<distanceHero2) {
             var aimAngle = Math.atan2(distanceHero1Y,distanceHero1X) / Math.PI * 180
-            this.defineDirection(distanceHero1, aimAngle, ctx, [heroes[ID_SASHA], heroes[ID_YIN]])
+            this.defineDirection(distanceHero1, aimAngle, ctx, heroes)
         } else if (distanceHero1==undefined && distanceHero1>distanceHero2) {
             var aimAngle = Math.atan2(distanceHero2Y,distanceHero2X) / Math.PI * 180
-            this.defineDirection(distanceHero2, aimAngle, ctx, [heroes[ID_SASHA], heroes[ID_YIN]])
+            this.defineDirection(distanceHero2, aimAngle, ctx, heroes)
         }
 	}
     
