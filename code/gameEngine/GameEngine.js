@@ -15,13 +15,14 @@ function main() {
 	var canvas = document.getElementById("canvas")
 	var ctx = canvas.getContext("2d")
 	var heroes, healths
-	var career = LoadCareer()
+	var deadHeroes= new Array(TOT_HEROES)
+	LoadCareer()
 	var training_camp= new Array(TOT_LEVELS)
 	for (let i = 0; i < TOT_LEVELS; i++) {
 		training_camp[i]= new Nivel(i+1, "training_camp", "../resources/images/maps/Training Camp/level"+(i+1)+".png", canvas, ctx)
 	}
 	
-	
+	document.addEventListener('keydown',backMainMenu)
 	playBackgroundMusic()
 
 	initAllComponents(ctx)
@@ -44,7 +45,7 @@ function main() {
 		drawBlocks(ctx, training_camp[0].hardBlockArray)
 		drawSprites(ctx, training_camp[0].allEnemies)
 		drawSprites(ctx, heroes)
-		animLoop(ctx, heroes, training_camp, healths)
+		animLoop(ctx, heroes, training_camp, healths, deadHeroes)
 	}
 }
 
@@ -183,14 +184,14 @@ function drawBlocks(ctx, blocks) {
 }
 
 var actualLevel=0
-function animLoop(ctx, heroes, training_camp, healths) {
-	var al = function() { animLoop(ctx, heroes, training_camp, healths) }
+function animLoop(ctx, heroes, training_camp, healths, deadHeroes) {
+	var al = function() { animLoop(ctx, heroes, training_camp, healths, deadHeroes) }
 	window.requestAnimationFrame(al)
 	
-	renderGame(ctx, heroes, training_camp, healths)
+	renderGame(ctx, heroes, training_camp, healths, deadHeroes)
 }
 
-function renderGame(ctx, heroes, training_camp, healths) {
+function renderGame(ctx, heroes, training_camp, healths, deadHeroes) {
 	let ch= ctx.canvas.height
 	let cw= ctx.canvas.width
 	let enemies= training_camp[actualLevel].allEnemies
@@ -205,7 +206,7 @@ function renderGame(ctx, heroes, training_camp, healths) {
 	for (let i = 0; i < training_camp[actualLevel].tot_enemies; i++) {
 		if (heroes[ID_SASHA]!=undefined) heroes[ID_SASHA].detectIntersection(enemies[i])
 		if (heroes[ID_YIN]!=undefined) heroes[ID_YIN].detectIntersection(enemies[i])
-		renderBullets(ctx, enemies, i, heroes, healths)
+		renderBullets(ctx, enemies, i, heroes, healths, deadHeroes)
 		allBlockColisions(enemies[i], hardBlockArray)
 		if (enemies[i]!=undefined) enemies[i].updateAimFollow(heroes, ctx)
 	}
@@ -242,11 +243,11 @@ function renderGame(ctx, heroes, training_camp, healths) {
 	//	NEW LEVEL
 	if (levelPassed(enemies)==true && actualLevel<3) {
 		actualLevel++
-		updateHeros(heroes, healths)
+		updateHeros(heroes, healths, deadHeroes)
 	}
 }
 
-function renderBullets(ctx, friendly, own, hostile, healths) {
+function renderBullets(ctx, friendly, own, hostile, healths, deadHeroes) {
 	var shooter= friendly[own]
 	if (shooter==undefined) return
 	let bullets= shooter.activated_bullets
@@ -277,7 +278,7 @@ function renderBullets(ctx, friendly, own, hostile, healths) {
 				} else {
 					shooter.activated_bullets.splice(i,1)
 					if (sht_host<hostile.length) {
-						damageCalculator(shooter, hostile, sht_host, healths)
+						damageCalculator(shooter, hostile, sht_host, healths, deadHeroes)
 					}
 				}
 			}
@@ -285,7 +286,7 @@ function renderBullets(ctx, friendly, own, hostile, healths) {
 	}
 }
 
-function damageCalculator(shooter, hostile, sht_host, healths) {
+function damageCalculator(shooter, hostile, sht_host, healths, deadHeroes) {
 	let damage
 	if (Inimigo.prototype.isPrototypeOf(shooter)==true && Personagem.prototype.isPrototypeOf(hostile[sht_host])==true) { 
 		damage= Math.floor(Math.random() * (MAX_LOOSING_HP/2 - MIN_LOOSING_HP/2) ) + MIN_LOOSING_HP/2
@@ -298,6 +299,11 @@ function damageCalculator(shooter, hostile, sht_host, healths) {
 	} if (hostile[sht_host].health<=0) {
 		if (hostile[sht_host].health<0) hostile[sht_host].health=0
 		hostile[sht_host].walkingSound.pause()
+		if (Personagem.prototype.isPrototypeOf(hostile[sht_host])==true) {
+			if (sht_host==ID_SASHA) deadHeroes[ID_SASHA]=hostile[sht_host]
+			else if (sht_host==ID_YIN) deadHeroes[ID_YIN]=hostile[sht_host]
+		}
+		hostile[sht_host]
 		hostile[sht_host]=undefined
 	}
 }
@@ -313,10 +319,7 @@ function detectKeyboard(heroes) {
 
 function keyUpDownHandler(ev, heroes) {
 	if (ev.type=="keydown") {
-		if (ev.code=="Escape") 
-			location.replace("html/menu_newgame.html")
-		// SHOOT YIN
-		else if (ev.code=="ShiftRight" && heroes[ID_YIN]!=undefined && heroes[ID_YIN].keyStatus.firing==false) 
+		if (ev.code=="ShiftRight" && heroes[ID_YIN]!=undefined && heroes[ID_YIN].keyStatus.firing==false) 
 			heroes[ID_YIN].defineBullet()
 		// SHOOT SASHA
 		else if (ev.code=="ShiftLeft" && heroes[ID_SASHA]!=undefined && heroes[ID_SASHA].keyStatus.firing==false) 
@@ -360,11 +363,28 @@ function levelPassed(enemies) {
 	}
 	return true
 }
-function updateHeros(heroes, healths) {
-	healths.healSasha()
-	healths.healYin()
+function updateHeros(heroes, healths, deadHeroes) {
+	if (heroes[ID_SASHA]==undefined) {
+		heroes[ID_SASHA]=deadHeroes[ID_SASHA]
+		deadHeroes[ID_SASHA]=undefined
+	} else if (heroes[ID_YIN]==undefined) {
+		heroes[ID_YIN]=deadHeroes[ID_YIN]
+		deadHeroes[ID_YIN]= undefined
+	} if (heroes[ID_SASHA].health!=heroes[ID_SASHA].FULL_HEALTH) {
+		heroes[ID_SASHA].health=heroes[ID_SASHA].FULL_HEALTH
+		healths.healSasha()
+	} if (heroes[ID_YIN].health!=heroes[ID_YIN].FULL_HEALTH) {
+		heroes[ID_YIN].health=heroes[ID_YIN].FULL_HEALTH
+		healths.healYin()
+	} 
 	if (actualLevel==1 || actualLevel==2) {
 		heroes[ID_SASHA].x=100, heroes[ID_SASHA].y=440
 		heroes[ID_YIN].x=50, heroes[ID_YIN].y=420
 	}
+}
+
+function backMainMenu(ev) {
+	const key = ev.key
+	if (key === "Escape" && confirm("Back to Main Menu?")==true) 
+		location.replace("menu_main.html")
 }
