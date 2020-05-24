@@ -6,7 +6,7 @@
 
 const TOT_HEROES=2
 const ID_SASHA=0, ID_YIN=1
-const TOT_LEVELS=3
+const TOT_LEVELS=3, TOT_CHAPTERS=5
 const BLOCK_SIZE=32
 const CHARACTER_SIZE=40
 const MAX_LOOSING_HP=50, MIN_LOOSING_HP=20
@@ -17,11 +17,17 @@ function main() {
 	var heroes, healths
 	var deadHeroes= new Array(TOT_HEROES)
 	LoadCareer()
-	var training_camp= new Array(TOT_LEVELS)
+	var training_camp= new Array(TOT_LEVELS), jungle= new Array(TOT_LEVELS), warehouse= new Array(TOT_LEVELS), lab= new Array(TOT_LEVELS), final= new Array(TOT_LEVELS)
+
 	for (let i = 0; i < TOT_LEVELS; i++) {
 		training_camp[i]= new Nivel(i+1, "training_camp", "../resources/images/maps/Training Camp/level"+(i+1)+".png", canvas, ctx)
+		jungle[i]= new Nivel(i+1, "jungle", "../resources/images/maps/Jungle/level"+(i+1)+".png", canvas, ctx)
+		warehouse[i]= new Nivel(i+1, "warehouse", "../resources/images/maps/Warehouse/level"+(i+1)+".png", canvas, ctx)
+		lab[i]= new Nivel(i+1, "lab", "../resources/images/maps/Lab/level"+(i+1)+".png", canvas, ctx)
+		if (i!=TOT_LEVELS-1) final[i]= new Nivel(i+1, "escape", "../resources/images/maps/Escape/level"+(i+1)+".png", canvas, ctx)
+		else final[i]= new Nivel(i+1, "final_stage", "../resources/images/maps/Escape/level"+(i+1)+".png", canvas, ctx)
 	}
-	
+
 	document.addEventListener('keydown',backMainMenu)
 	playBackgroundMusic()
 
@@ -37,15 +43,19 @@ function main() {
 		heroes[ID_SASHA].imgData=heroes[ID_SASHA].getImageData()
 		heroes[ID_YIN].imgData=heroes[ID_YIN].getImageData()
 
-		for (let map = 0; map < training_camp.length; map++) {
+		for (let map = 0; map < TOT_HEROES; map++) {
 			for (let i = 0; i < training_camp[map].tot_enemies; i++) training_camp[map].allEnemies[i].bullets= heroes[ID_SASHA].bullets
+			for (let i = 0; i < warehouse[map].tot_enemies; i++) warehouse[map].allEnemies[i].bullets= heroes[ID_SASHA].bullets
+			for (let i = 0; i < jungle[map].tot_enemies; i++) jungle[map].allEnemies[i].bullets= heroes[ID_SASHA].bullets
+			for (let i = 0; i < lab[map].tot_enemies; i++) lab[map].allEnemies[i].bullets= heroes[ID_SASHA].bullets
+			for (let i = 0; i < final[map].tot_enemies; i++) final[map].allEnemies[i].bullets= heroes[ID_SASHA].bullets
 		} 
 
 		ctx.drawImage(training_camp[0].backgroundLevel, 0, 0, ctx.canvas.width, ctx.canvas.height)
 		drawBlocks(ctx, training_camp[0].hardBlockArray)
 		drawSprites(ctx, training_camp[0].allEnemies)
 		drawSprites(ctx, heroes)
-		animLoop(ctx, heroes, training_camp, healths, deadHeroes)
+		animLoop(ctx, heroes, [training_camp, warehouse, jungle, lab, final], healths, deadHeroes)
 	}
 }
 
@@ -183,31 +193,33 @@ function drawBlocks(ctx, blocks) {
 	}
 }
 
+var actualChapter=0
 var actualLevel=0
-function animLoop(ctx, heroes, training_camp, healths, deadHeroes) {
-	var al = function() { animLoop(ctx, heroes, training_camp, healths, deadHeroes) }
+function animLoop(ctx, heroes, chapters, healths, deadHeroes) {
+	var al = function() { animLoop(ctx, heroes, chapters, healths, deadHeroes) }
 	window.requestAnimationFrame(al)
 	
-	renderGame(ctx, heroes, training_camp, healths, deadHeroes)
+	renderGame(ctx, heroes, chapters, healths, deadHeroes)
 }
 
-function renderGame(ctx, heroes, training_camp, healths, deadHeroes) {
+function renderGame(ctx, heroes, chapters, healths, deadHeroes) {
 	let ch= ctx.canvas.height
 	let cw= ctx.canvas.width
-	let enemies= training_camp[actualLevel].allEnemies
-	let hardBlockArray= training_camp[actualLevel].hardBlockArray
+	let enemies= chapters[actualChapter][actualLevel].allEnemies
+	let hardBlockArray= chapters[actualChapter][actualLevel].hardBlockArray
 
 	detectKeyboard(heroes, enemies, ctx)
 
 	//	INTERSECTIONS WITH BLOCKS
-	allBlockColisions(heroes[ID_SASHA], hardBlockArray)
-	allBlockColisions(heroes[ID_YIN], hardBlockArray)
+	//allBlockColisions(heroes[ID_SASHA], hardBlockArray)
+	//allBlockColisions(heroes[ID_YIN], hardBlockArray)
 
-	for (let i = 0; i < training_camp[actualLevel].tot_enemies; i++) {
+	for (let i = 0; i < chapters[actualChapter][actualLevel].tot_enemies; i++) {
 		if (heroes[ID_SASHA]!=undefined) heroes[ID_SASHA].detectIntersection(enemies[i])
-		if (heroes[ID_YIN]!=undefined) heroes[ID_YIN].detectIntersection(enemies[i])
+		if (heroes[ID_YIN]!=undefined) 
+			heroes[ID_YIN].detectIntersection(enemies[i])
 		renderBullets(ctx, enemies, i, heroes, healths, deadHeroes)
-		allBlockColisions(enemies[i], hardBlockArray)
+		//allBlockColisions(enemies[i], hardBlockArray)
 		if (enemies[i]!=undefined) enemies[i].updateAimFollow(heroes, ctx)
 	}
 
@@ -228,7 +240,7 @@ function renderGame(ctx, heroes, training_camp, healths, deadHeroes) {
 	//	=====================
 	//	DRAW EVERYTING HERE
 	//	DRAW MAP
-	ctx.drawImage(training_camp[actualLevel].backgroundLevel, 0, 0, cw, ch)
+	ctx.drawImage(chapters[actualChapter][actualLevel].backgroundLevel, 0, 0, cw, ch)
 	drawBlocks(ctx, hardBlockArray)
 	//	DRAW CHARACTERES
 	drawSprites(ctx, heroes)
@@ -236,14 +248,21 @@ function renderGame(ctx, heroes, training_camp, healths, deadHeroes) {
 	//	DRAW BULLETS
 	if (heroes[ID_SASHA]!=undefined) drawSprites(ctx, heroes[ID_SASHA].activated_bullets)
 	if (heroes[ID_YIN]!=undefined) drawSprites(ctx, heroes[ID_YIN].activated_bullets)
-	for (let i = 0; i < training_camp[actualLevel].tot_enemies; i++) {
+	for (let i = 0; i < chapters[actualChapter][actualLevel].tot_enemies; i++) {
 		if (enemies[i]!=undefined) drawSprites(ctx, enemies[i].activated_bullets)
 	}
 	
 	//	NEW LEVEL
-	if (levelPassed(enemies)==true && actualLevel<3) {
-		actualLevel++
+	if (levelPassed(enemies)==true && actualChapter<TOT_CHAPTERS && actualLevel<TOT_LEVELS) {
 		updateHeros(heroes, healths, deadHeroes)
+		if (actualLevel==TOT_LEVELS-1) {
+			actualChapter++
+			actualLevel=0
+		}
+		else actualLevel++
+		//var career = LoadCareer()
+		//career.level = career.level[0] + actualLevel
+		//career.saveCareer()		
 	}
 }
 
@@ -265,10 +284,11 @@ function renderBullets(ctx, friendly, own, hostile, healths, deadHeroes) {
 				//	CHECK THE BULLETS FIRING
 				if (bullets.length==0 || i==bullets.length) return
 
-				if (hostile[sht_host]!=undefined && sht_host<hostile.length) 
+				if (sht_host<hostile.length && hostile[sht_host]!=undefined) {
 					intersectsHostile= hostile[sht_host].intersectionWith(bullets[i])
-				if (friendly[sht_frd]!=undefined && sht_frd<friendly.length && sht_frd!=own) 
+				} if (sht_frd<friendly.length && sht_frd!=own && friendly[sht_frd]!=undefined) {
 					intersectsFriendly= friendly[sht_frd].intersectionWith(bullets[i])
+				}
 				//	CHECK INTERSECTION WITH ENEMIES OF FRIENDLY HERO
 				if (intersectsHostile==false && intersectsFriendly==false) {
 					if (moving_flag==false) {
@@ -277,9 +297,7 @@ function renderBullets(ctx, friendly, own, hostile, healths, deadHeroes) {
 					}
 				} else {
 					shooter.activated_bullets.splice(i,1)
-					if (sht_host<hostile.length) {
-						damageCalculator(shooter, hostile, sht_host, healths, deadHeroes)
-					}
+					if (sht_host<hostile.length) damageCalculator(shooter, hostile, sht_host, healths, deadHeroes)
 				}
 			}
 		} else shooter.activated_bullets.splice(i,1)
