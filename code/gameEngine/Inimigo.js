@@ -169,6 +169,7 @@ class Inimigo extends ElementoSolto {
     }
 
     detectIntersection(sprite) {
+        if (sprite==undefined) return
         var contactPoint= this.intersectionWith(sprite)
         if (contactPoint==false) return false
         else if (contactPoint[0]<sprite.x+sprite.width/2) this.stop("ArrowRight")

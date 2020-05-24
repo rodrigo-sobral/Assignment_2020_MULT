@@ -13,33 +13,30 @@ const MAX_LOOSING_HP=50, MIN_LOOSING_HP=20
 function main() {
 	var canvas = document.getElementById("canvas")
 	var ctx = canvas.getContext("2d")
-	var heroes, enemies, healths
+	var heroes, healths
 	var career = LoadCareer()
 	var level1= new Nivel(1, "training_camp", "../resources/images/maps/Training Camp/level1.png", canvas, ctx)
-
+	
 	playBackgroundMusic()
 
 	initAllComponents(ctx)
-	canvas.addEventListener("initend", initEndHandler)
+	canvas.addEventListener("initend", charInitEnd)
 
-	function initEndHandler(ev) {
+	function charInitEnd(ev) {
 		heroes= ev.heroes
-		enemies= ev.enemies
 		healths= ev.healths
 
 		heroes[ID_SASHA].img=heroes[ID_SASHA].stopped_sprites[1]
 		heroes[ID_YIN].img=heroes[ID_YIN].stopped_sprites[1]
 		heroes[ID_SASHA].imgData=heroes[ID_SASHA].getImageData()
 		heroes[ID_YIN].imgData=heroes[ID_YIN].getImageData()
-
-		enemies[0].img=enemies[0].stopped_sprites[3]
-		enemies[0].imgData=enemies[0].getImageData()
 		
+		for (let i = 0; i < level1.tot_enemies; i++) level1.allEnemies[i].bullets= heroes[ID_SASHA].bullets
 		ctx.drawImage(level1.backgroundLevel, 0, 0, ctx.canvas.width, ctx.canvas.height)
 		drawBlocks(ctx, level1.hardBlockArray)
-		drawSprites(ctx, enemies)
+		drawSprites(ctx, level1.allEnemies)
 		drawSprites(ctx, heroes)
-		animLoop(ctx, heroes, enemies, level1, healths)
+		animLoop(ctx, heroes, level1, healths)
 	}
 }
 
@@ -64,16 +61,14 @@ function playBackgroundMusic() {
 
 function initAllComponents(ctx) {
 	var ids=["Left", "Right", "Up", "Down"]
-	var enemies = new Array(1)
 	var heroes = new Array(TOT_HEROES)
 	heroes[ID_SASHA] = new Personagem(100, 360, CHARACTER_SIZE, CHARACTER_SIZE, 2)
 	heroes[ID_YIN]= new Personagem(50, 400, CHARACTER_SIZE, CHARACTER_SIZE, 2)
-	enemies[0]= new Inimigo(400, 100, CHARACTER_SIZE, CHARACTER_SIZE, 1)
+	
 	var sashaSprite, yinSprite, auxYin, auxSasha, bullet_sprite
-	var enemieSprite, auxEnemie
 	var nLoad = 0
-	//	enemies + bullets + posiçoes paradas + posiçoes caminhando
-	var totLoad= enemies.length*12 + 8 + 2*12
+	//	bullets + posiçoes paradas + posiçoes caminhando
+	var totLoad= 8 + 2*12
 
 	// LOAD STOPPED HEROES
 	for (let i=0; i<4; i++) {
@@ -105,26 +100,6 @@ function initAllComponents(ctx) {
 		sashaSprite.addEventListener("load", imgLoadedHandler)
 		auxYin.addEventListener("load", imgLoadedHandler)
 		auxSasha.addEventListener("load", imgLoadedHandler)
-	}
-
-	//	STOPPED AGENT
-	for (let i=0; i<4; i++) {
-		enemieSprite= new Image()
-		enemieSprite.id= "enemie"+ids[i]
-		enemieSprite.src= "../resources/images/enemies/agent_"+ids[i]+"1.png"
-		enemieSprite.addEventListener("load", imgLoadedHandler)
-	}
-
-	//	MOVING AGENT
-	for (let i=0; i<4; i++) {
-		enemieSprite= new Image()
-		auxEnemie= new Image()
-		enemieSprite.id= "enemie"+ids[i]+"2"
-		auxEnemie.id="enemie"+ids[i]+"3"
-		enemieSprite.src= "../resources/images/enemies/agent_"+ids[i]+"2.png"
-		auxEnemie.src="../resources/images/enemies/agent_"+ids[i]+"3.png"
-		enemieSprite.addEventListener("load", imgLoadedHandler)
-		auxEnemie.addEventListener("load", imgLoadedHandler)
 	}
 
 	//	LOAD BULLETS
@@ -170,29 +145,15 @@ function initAllComponents(ctx) {
 				else if (img.id.includes(ids[2])) heroes[ID_YIN].walking_sprites[2].push(img)
 				else if (img.id.includes(ids[3])) heroes[ID_YIN].walking_sprites[3].push(img)
 			}
-		} else if (img.id.includes("enemie")==true) {
-			if (img.src.includes("1.png")) {
-				if (img.id.includes(ids[0]))enemies[0].stopped_sprites[0]=img
-				else if (img.id.includes(ids[1]))enemies[0].stopped_sprites[1]=img
-				else if (img.id.includes(ids[2]))enemies[0].stopped_sprites[2]=img
-				else if (img.id.includes(ids[3]))enemies[0].stopped_sprites[3]=img
-			} else {
-				if (img.id.includes(ids[0]))enemies[0].walking_sprites[0].push(img)
-				else if (img.id.includes(ids[1]))enemies[0].walking_sprites[1].push(img)
-				else if (img.id.includes(ids[2]))enemies[0].walking_sprites[2].push(img)
-				else if (img.id.includes(ids[3]))enemies[0].walking_sprites[3].push(img)
-			}
 		} else if (img.id.includes("bullet")==true) {
 			heroes[ID_SASHA].bullets.push(img)
 			heroes[ID_YIN].bullets.push(img)
-			enemies[0].bullets.push(img)
 		}
 
 		nLoad++	
 		if (nLoad == totLoad) {
 			var ev2 = new Event("initend");
 			ev2.heroes= heroes
-			ev2.enemies= enemies
 			ev2.healths= new Healths(heroes[ID_SASHA].health, heroes[ID_YIN].health)
 			ctx.canvas.dispatchEvent(ev2);
 		}
@@ -213,44 +174,45 @@ function drawBlocks(ctx, blocks) {
 	}
 }
 
-function animLoop(ctx, heroes, enemies, level, healths) {
-	var al = function() { animLoop(ctx, heroes, enemies, level, healths) }
+function animLoop(ctx, heroes, level, healths) {
+	var al = function() { animLoop(ctx, heroes, level, healths) }
 	window.requestAnimationFrame(al)
 	
-	renderGame(ctx, heroes, enemies, level, healths)
+	renderGame(ctx, heroes, level, healths)
 }
 
-function renderGame(ctx, heroes, enemies, level, healths) {
+function renderGame(ctx, heroes, level, healths) {
 	let ch= ctx.canvas.height
 	let cw= ctx.canvas.width
-	let blocks= level.hardBlockArray
+	let enemies= level.allEnemies
+	let hardBlockArray= level.hardBlockArray
 	
 	detectKeyboard(heroes, enemies, ctx)
 
 	//	INTERSECTIONS WITH BLOCKS
-	allBlockColisions(heroes[ID_SASHA], blocks)
+	allBlockColisions(heroes[ID_SASHA], hardBlockArray)
+	allBlockColisions(heroes[ID_YIN], hardBlockArray)
 
-	//	INTERSECTIONS BETWEEN HEROES
-	if (heroes[ID_YIN]!=undefined && heroes[ID_SASHA]!=undefined) {
-		heroes[ID_SASHA].detectIntersection(heroes[ID_YIN])
-		heroes[ID_YIN].detectIntersection(heroes[ID_SASHA])
-	}
-	//	INTERSECTIONS WITH ENEMIES
-	if (enemies[0]!=undefined) {
-		if (heroes[ID_SASHA]!=undefined) heroes[ID_SASHA].detectIntersection(enemies[0])
-		if (heroes[ID_YIN]!=undefined) heroes[ID_YIN].detectIntersection(enemies[0])
+	for (let i = 0; i < level.tot_enemies; i++) {
+		if (heroes[ID_SASHA]!=undefined) heroes[ID_SASHA].detectIntersection(enemies[i])
+		if (heroes[ID_YIN]!=undefined) heroes[ID_YIN].detectIntersection(enemies[i])
+		renderBullets(ctx, enemies[i], enemies, i, heroes, healths)
+		allBlockColisions(enemies[i], hardBlockArray)
+		if (enemies[i]!=undefined) enemies[i].updateAimFollow(heroes, ctx)
 	}
 
 	//	DRAW BULLETS WHEN FIRING
 	renderBullets(ctx, heroes[ID_SASHA], heroes, ID_SASHA, enemies, undefined)
 	renderBullets(ctx, heroes[ID_YIN], heroes, ID_YIN, enemies, undefined)
-	renderBullets(ctx, enemies[0], enemies, 0, heroes, healths)
 
-	//	HEROES MOVEMENT
-	if (heroes[ID_SASHA]!=undefined) heroes[ID_SASHA].moving(cw, ch)
-	if (heroes[ID_YIN]!=undefined) heroes[ID_YIN].moving(cw, ch)
-	if (enemies[0]!=undefined) enemies[0].updateAimFollow(heroes, ctx)
-	
+	//	HEROES MOVEMENT AND INTERSECTIONS
+	if (heroes[ID_SASHA]!=undefined) {
+		heroes[ID_SASHA].moving(cw, ch)
+		heroes[ID_SASHA].detectIntersection(heroes[ID_YIN])
+	} if (heroes[ID_YIN]!=undefined) {
+		heroes[ID_YIN].moving(cw, ch)
+		heroes[ID_YIN].detectIntersection(heroes[ID_SASHA])
+	}
 
 	ctx.clearRect(0, 0, cw, ch)
 	//	=====================
@@ -258,14 +220,16 @@ function renderGame(ctx, heroes, enemies, level, healths) {
 	//	=====================
 	//	DRAW MAP
 	ctx.drawImage(level.backgroundLevel, 0, 0, cw, ch)
-	drawBlocks(ctx, blocks)
+	drawBlocks(ctx, hardBlockArray)
 	//	DRAW CHARACTERES
 	drawSprites(ctx, heroes)
 	drawSprites(ctx, enemies)
 	//	DRAW BULLETS
 	if (heroes[ID_SASHA]!=undefined) drawSprites(ctx, heroes[ID_SASHA].activated_bullets)
 	if (heroes[ID_YIN]!=undefined) drawSprites(ctx, heroes[ID_YIN].activated_bullets)
-	if (enemies[0]!=undefined) drawSprites(ctx, enemies[0].activated_bullets)
+	for (let i = 0; i < level.tot_enemies; i++) {
+		if (enemies[i]!=undefined) drawSprites(ctx, enemies[i].activated_bullets)
+	}
 }
 
 function renderBullets(ctx, shooter, friendly, own, hostile, healths) {
@@ -365,6 +329,7 @@ function keyUpDownHandler(ev, heroes) {
 }
 
 function allBlockColisions(character, block_matrix) {
+	if (character==undefined) return
 	for (let i = 0; i < block_matrix.length; i++) {
 		for (let j = 0; j < block_matrix[i].length; j++) {
 			if (block_matrix[i][j]!=0) {

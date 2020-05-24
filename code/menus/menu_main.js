@@ -5,9 +5,6 @@
 }());
 
 function main() {
-    //var backgroundMusic= new Audio("../resources/sounds/menuBackgroundMusic.mp3")
-    //backgroundMusic.id="backgroundMusic"
-    //backgroundMusic.play()
     var playBtn = document.getElementById("playBtn");
     var optionsBtn = document.getElementById("optionsBtn");
     var helpBtn = document.getElementById("helpBtn");
