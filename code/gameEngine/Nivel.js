@@ -6,8 +6,7 @@ class Nivel {
         this.chapter = chapter
         this.backgroundLevel = new Image()
         this.backgroundLevel.src = backgroundPath
-        if (id == 1) this.tot_enemies = 5
-        else if (id == 2) this.tot_enemies = 5
+        this.tot_enemies = 5
         this.fixedBlocksMatrix = this.initMatrix()        
         this.tot_blocks = this.blockCounter()
         this.allEnemies = new Array()
@@ -86,8 +85,8 @@ class Nivel {
                 [13, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11],
                 [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11],
                 [13, 26, 26, 26, 26, 26, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 15, 15, 15],
-                [13, 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 11],
-                [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 11],
+                [13, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 11],
+                [13, 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 11],
                 [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 15, 15, 0, 0, 20, 0, 11],
                 [9, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 10]]
         } else if (this.id == 1 && this.chapter == "jungle") {
@@ -380,22 +379,34 @@ class Nivel {
 
     fullEnemies(agentEnemie) {
         for (let i = 0; i < this.tot_enemies; i++) {
-                this.allEnemies.push(new Inimigo(400, 50, CHARACTER_SIZE, CHARACTER_SIZE, 1))
+                this.allEnemies.push(new Inimigo(0, 0, CHARACTER_SIZE, CHARACTER_SIZE, 1))
                 this.allEnemies[i].stopped_sprites = agentEnemie.stopped_sprites
                 this.allEnemies[i].walking_sprites = agentEnemie.walking_sprites
-                this.allEnemies[i].img = this.allEnemies[i].stopped_sprites[3]
-                this.allEnemies[i].imgData = this.allEnemies[i].getImageData()
         }
-        if (this.id == 1) {
-                this.allEnemies[1].x = 130, this.allEnemies[1].y = 100
-                this.allEnemies[2].x = 1120, this.allEnemies[2].y = 70
-                this.allEnemies[3].x = 750, this.allEnemies[3].y = 400
-                this.allEnemies[4].x = 700, this.allEnemies[4].y = 100
-        } else if (this.id == 2) {
-            this.allEnemies[1].x = 400, this.allEnemies[1].y = 100
+        if (this.id == 1 && this.chapter=="training_camp") {
+            this.allEnemies[0].x = 400, this.allEnemies[0].y = 50
+            this.allEnemies[1].x = 130, this.allEnemies[1].y = 100
             this.allEnemies[2].x = 1120, this.allEnemies[2].y = 70
             this.allEnemies[3].x = 750, this.allEnemies[3].y = 400
             this.allEnemies[4].x = 700, this.allEnemies[4].y = 100
+        } else if (this.id == 2 && this.chapter=="training_camp") {
+            this.allEnemies[0].x = 350, this.allEnemies[0].y = 70
+            this.allEnemies[1].x = 400, this.allEnemies[1].y = 80
+            this.allEnemies[2].x = 1120, this.allEnemies[2].y = 70
+            this.allEnemies[3].x = 750, this.allEnemies[3].y = 400
+            this.allEnemies[4].x = 700, this.allEnemies[4].y = 100
+        } else if (this.id == 3 && this.chapter=="training_camp") {
+            this.allEnemies[0].x = 200, this.allEnemies[0].y = 70
+            this.allEnemies[1].x = 500, this.allEnemies[1].y = 80
+            this.allEnemies[2].x = 1110, this.allEnemies[2].y = 170
+            this.allEnemies[3].x = 1110, this.allEnemies[3].y = 430
+            this.allEnemies[4].x = 840, this.allEnemies[4].y = 180
+        } else {
+            this.allEnemies[0].x = 200, this.allEnemies[0].y = 70
+            this.allEnemies[1].x = 500, this.allEnemies[1].y = 80
+            this.allEnemies[2].x = 1110, this.allEnemies[2].y = 170
+            this.allEnemies[3].x = 1110, this.allEnemies[3].y = 430
+            this.allEnemies[4].x = 840, this.allEnemies[4].y = 180
         }
     }
 }

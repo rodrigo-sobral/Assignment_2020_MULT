@@ -19,6 +19,7 @@ function main() {
 	LoadCareer()
 	var training_camp= new Array(TOT_LEVELS), jungle= new Array(TOT_LEVELS), warehouse= new Array(TOT_LEVELS), lab= new Array(TOT_LEVELS), final= new Array(TOT_LEVELS)
 
+	//	LOAD ALL MAPS
 	for (let i = 0; i < TOT_LEVELS; i++) {
 		training_camp[i]= new Nivel(i+1, "training_camp", "../resources/images/maps/Training Camp/level"+(i+1)+".png", canvas, ctx)
 		jungle[i]= new Nivel(i+1, "jungle", "../resources/images/maps/Jungle/level"+(i+1)+".png", canvas, ctx)
@@ -43,13 +44,7 @@ function main() {
 		heroes[ID_SASHA].imgData=heroes[ID_SASHA].getImageData()
 		heroes[ID_YIN].imgData=heroes[ID_YIN].getImageData()
 
-		for (let map = 0; map < TOT_HEROES; map++) {
-			for (let i = 0; i < training_camp[map].tot_enemies; i++) training_camp[map].allEnemies[i].bullets= heroes[ID_SASHA].bullets
-			for (let i = 0; i < warehouse[map].tot_enemies; i++) warehouse[map].allEnemies[i].bullets= heroes[ID_SASHA].bullets
-			for (let i = 0; i < jungle[map].tot_enemies; i++) jungle[map].allEnemies[i].bullets= heroes[ID_SASHA].bullets
-			for (let i = 0; i < lab[map].tot_enemies; i++) lab[map].allEnemies[i].bullets= heroes[ID_SASHA].bullets
-			for (let i = 0; i < final[map].tot_enemies; i++) final[map].allEnemies[i].bullets= heroes[ID_SASHA].bullets
-		} 
+		prepareEnemiesBlocks(training_camp, warehouse, jungle, lab, final, heroes[ID_SASHA].bullets)
 
 		ctx.drawImage(training_camp[0].backgroundLevel, 0, 0, ctx.canvas.width, ctx.canvas.height)
 		drawBlocks(ctx, training_camp[0].hardBlockArray)
@@ -179,6 +174,46 @@ function initAllComponents(ctx) {
 	}
 }
 
+function prepareEnemiesBlocks(training_camp, warehouse, jungle, lab, final, bullets) {
+	for (let map = 0; map < TOT_LEVELS; map++) {
+
+		//	ENEMIES
+		for (let i = 0; i < training_camp[map].tot_enemies; i++) {
+			training_camp[map].allEnemies[i].bullets= bullets
+			training_camp[map].allEnemies[i].img = training_camp[map].allEnemies[i].stopped_sprites[3]
+			training_camp[map].allEnemies[i].imgData = training_camp[map].allEnemies[i].getImageData()
+		} for (let i = 0; i < warehouse[map].tot_enemies; i++) {
+			warehouse[map].allEnemies[i].bullets= bullets
+			warehouse[map].allEnemies[i].img = warehouse[map].allEnemies[i].stopped_sprites[3]
+			warehouse[map].allEnemies[i].imgData = warehouse[map].allEnemies[i].getImageData()
+		} for (let i = 0; i < jungle[map].tot_enemies; i++) {
+			jungle[map].allEnemies[i].bullets= bullets
+			jungle[map].allEnemies[i].img = jungle[map].allEnemies[i].stopped_sprites[3]
+			jungle[map].allEnemies[i].imgData = jungle[map].allEnemies[i].getImageData()
+		} for (let i = 0; i < lab[map].tot_enemies; i++) {
+			lab[map].allEnemies[i].bullets= bullets
+			lab[map].allEnemies[i].img = lab[map].allEnemies[i].stopped_sprites[3]
+			lab[map].allEnemies[i].imgData = lab[map].allEnemies[i].getImageData()
+		} for (let i = 0; i < final[map].tot_enemies; i++) {
+			final[map].allEnemies[i].bullets= bullets
+			final[map].allEnemies[i].img = final[map].allEnemies[i].stopped_sprites[3]
+			final[map].allEnemies[i].imgData = final[map].allEnemies[i].getImageData()
+		}
+
+		//	WALL BLOCKS
+		let block
+		for (let i = 0; i < training_camp[map].hardBlockArray.length; i++) {
+			for (let j = 0; j < training_camp[map].hardBlockArray[i].length; j++) {
+				if ((block=training_camp[map].hardBlockArray[i][j])!=0) block.imgData=block.getImageData()
+				if ((block=warehouse[map].hardBlockArray[i][j])!=0) block.imgData=block.getImageData()
+				if ((block=jungle[map].hardBlockArray[i][j])!=0) block.imgData=block.getImageData()
+				if ((block=lab[map].hardBlockArray[i][j])!=0) block.imgData=block.getImageData()
+				if ((block=final[map].hardBlockArray[i][j])!=0) block.imgData=block.getImageData()
+			}
+		}
+	} 
+}
+
 function drawSprites(ctx, sprites) {
 	for (let i=0; i < sprites.length; i++) {
 		if (sprites[i]!=undefined) sprites[i].draw(ctx);
@@ -193,8 +228,8 @@ function drawBlocks(ctx, blocks) {
 	}
 }
 
-var actualChapter=0
-var actualLevel=0
+let actualChapter=0
+let actualLevel=2
 function animLoop(ctx, heroes, chapters, healths, deadHeroes) {
 	var al = function() { animLoop(ctx, heroes, chapters, healths, deadHeroes) }
 	window.requestAnimationFrame(al)
@@ -211,28 +246,27 @@ function renderGame(ctx, heroes, chapters, healths, deadHeroes) {
 	detectKeyboard(heroes, enemies, ctx)
 
 	//	INTERSECTIONS WITH BLOCKS
-	//allBlockColisions(heroes[ID_SASHA], hardBlockArray)
-	//allBlockColisions(heroes[ID_YIN], hardBlockArray)
+	allBlockColisions(heroes[ID_SASHA], hardBlockArray, ctx)
+	allBlockColisions(heroes[ID_YIN], hardBlockArray, ctx)
 
 	for (let i = 0; i < chapters[actualChapter][actualLevel].tot_enemies; i++) {
-		if (heroes[ID_SASHA]!=undefined) heroes[ID_SASHA].detectIntersection(enemies[i])
-		if (heroes[ID_YIN]!=undefined) 
-			heroes[ID_YIN].detectIntersection(enemies[i])
-		renderBullets(ctx, enemies, i, heroes, healths, deadHeroes)
-		//allBlockColisions(enemies[i], hardBlockArray)
-		if (enemies[i]!=undefined) enemies[i].updateAimFollow(heroes, ctx)
+		if (heroes[ID_SASHA]!=undefined) heroes[ID_SASHA].detectIntersection(enemies[i], ctx)
+		if (heroes[ID_YIN]!=undefined) heroes[ID_YIN].detectIntersection(enemies[i], ctx)
+		renderBullets(ctx, enemies, i, heroes, chapters[actualChapter][actualLevel].hardBlockArray, healths, deadHeroes)
+		allBlockColisions(enemies[i], hardBlockArray, ctx)
+		if (enemies[i]!=undefined) enemies[i].updateAimFollow(heroes, hardBlockArray ,ctx)
 	}
 
 	//	DRAW BULLETS WHEN FIRING
-	renderBullets(ctx, heroes, ID_SASHA, enemies, undefined)
-	renderBullets(ctx, heroes, ID_YIN, enemies, undefined)
+	renderBullets(ctx, heroes, ID_SASHA, enemies, chapters[actualChapter][actualLevel].hardBlockArray, undefined, undefined)
+	renderBullets(ctx, heroes, ID_YIN, enemies, chapters[actualChapter][actualLevel].hardBlockArray, undefined, undefined)
 
 	//	HEROES MOVEMENT AND INTERSECTIONS
 	if (heroes[ID_SASHA]!=undefined) {
-		heroes[ID_SASHA].detectIntersection(heroes[ID_YIN])
+		heroes[ID_SASHA].detectIntersection(heroes[ID_YIN], ctx)
 		heroes[ID_SASHA].moving(cw, ch)
 	} if (heroes[ID_YIN]!=undefined) {
-		heroes[ID_YIN].detectIntersection(heroes[ID_SASHA])
+		heroes[ID_YIN].detectIntersection(heroes[ID_SASHA], ctx)
 		heroes[ID_YIN].moving(cw, ch)
 	}
 
@@ -252,33 +286,32 @@ function renderGame(ctx, heroes, chapters, healths, deadHeroes) {
 		if (enemies[i]!=undefined) drawSprites(ctx, enemies[i].activated_bullets)
 	}
 	
+	//	=====================
 	//	NEW LEVEL
 	if (levelPassed(enemies)==true && actualChapter<TOT_CHAPTERS && actualLevel<TOT_LEVELS) {
-		updateHeros(heroes, healths, deadHeroes)
-		if (actualLevel==TOT_LEVELS-1) {
-			actualChapter++
-			actualLevel=0
-		}
+		if (actualLevel==TOT_LEVELS-1) { actualChapter++; actualLevel=0 }
 		else actualLevel++
-		//var career = LoadCareer()
-		//career.level = career.level[0] + actualLevel
-		//career.saveCareer()		
+		updateHeros(heroes, healths, deadHeroes)	
 	}
 }
 
-function renderBullets(ctx, friendly, own, hostile, healths, deadHeroes) {
+function renderBullets(ctx, friendly, own, hostile, mapBlocks, healths, deadHeroes) {
 	var shooter= friendly[own]
-	if (shooter==undefined) return
-	let bullets= shooter.activated_bullets
+	let bullets
+	if (shooter==undefined || (bullets=shooter.activated_bullets).length==0) return
 	let cw=ctx.canvas.width, ch=ctx.canvas.height
 	let moving_flag
 	let intersectsHostile, intersectsFriendly
-	if (bullets.length==0) return
 
 	for (let i=0; i<bullets.length; i++) {
 		moving_flag=false
+		//	CHECK THE BULLETS FIRING
+		if (bullets[i]==undefined) 
+		return
+
 		//	CHECK LIMITS OF THE GAME CANVAS
 		if (bullets[i].x>0 && bullets[i].x+bullets[i].width<cw && bullets[i].y>0 && bullets[i].y+bullets[i].height<ch) {
+			if (bulletsBlocksIntersection(bullets[i], mapBlocks)==true) { shooter.activated_bullets.splice(i,1); return }
 			for (let sht_host=0, sht_frd=0; sht_host<hostile.length || sht_frd<friendly.length; sht_host++, sht_frd++) {
 				intersectsHostile= intersectsFriendly= false
 				//	CHECK THE BULLETS FIRING
@@ -364,15 +397,38 @@ function keyUpDownHandler(ev, heroes) {
 	}
 }
 
-function allBlockColisions(character, block_matrix) {
+function allBlockColisions(character, block_matrix, ctx) {
 	if (character==undefined) return
-	for (let i = 0; i < block_matrix.length; i++) {
-		for (let j = 0; j < block_matrix[i].length; j++) {
-			if (block_matrix[i][j]!=0) {
-				character.detectIntersection(block_matrix[i][j])
-			}
-		}		
+	let block
+	let centerX= Math.floor((character.x+character.width/2)/BLOCK_SIZE)
+	let centerY= Math.floor((character.y+character.height/2)/BLOCK_SIZE)
+	if ((block=block_matrix[centerY][centerX])!=0) {
+		character.detectIntersection(block, ctx)
+	} if (centerY!=0 && (block=block_matrix[centerY-1][centerX])!=0) {
+		character.detectIntersection(block, ctx)
+	} if (centerX!=0 && (block=block_matrix[centerY][centerX-1])!=0) {
+		character.detectIntersection(block, ctx)
+	} if (centerX!=block_matrix[0].length && (block=block_matrix[centerY][centerX+1])!=0) {
+		character.detectIntersection(block, ctx)
+	} if (centerY!=block_matrix.length && (block=block_matrix[centerY+1][centerX])!=0) {
+		character.detectIntersection(block, ctx)
+	} if (centerY!=0 && centerX!=0 && (block=block_matrix[centerY-1][centerX-1])!=0) {
+		character.detectIntersection(block, ctx)
+	} if (centerX!=block_matrix[0].length && centerY!=block_matrix.length && (block=block_matrix[centerY+1][centerX+1])!=0) {
+		character.detectIntersection(block, ctx)
+	} if (centerX!=block_matrix[0].length && centerY!=0 && (block=block_matrix[centerY-1][centerX+1])!=0) {
+		character.detectIntersection(block, ctx)
+	} if (centerX!=0 && centerY!=block_matrix.length && (block=block_matrix[centerY+1][centerX-1])!=0) {
+		character.detectIntersection(block, ctx)
 	}
+}
+function bulletsBlocksIntersection(bullet, mapBlocks) {
+	for (let i = 0; i < mapBlocks.length; i++) {
+		for (let j = 0; j < mapBlocks[i].length; j++) {
+			if (mapBlocks[i][j]!=0 && mapBlocks[i][j].intersectionWith(bullet)!=false) return true
+		}
+	}
+	return false
 }
 
 function levelPassed(enemies) {
@@ -395,9 +451,12 @@ function updateHeros(heroes, healths, deadHeroes) {
 		heroes[ID_YIN].health=heroes[ID_YIN].FULL_HEALTH
 		healths.healYin()
 	} 
-	if (actualLevel==1 || actualLevel==2) {
+	if (actualChapter==0) {
 		heroes[ID_SASHA].x=100, heroes[ID_SASHA].y=440
 		heroes[ID_YIN].x=50, heroes[ID_YIN].y=420
+	} else if (actualChapter==1 && actualLevel==0) {
+		heroes[ID_SASHA].x=100, heroes[ID_SASHA].y=440
+		heroes[ID_YIN].x=100, heroes[ID_YIN].y=470
 	}
 }
 

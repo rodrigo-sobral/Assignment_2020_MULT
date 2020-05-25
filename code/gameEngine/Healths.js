@@ -79,8 +79,8 @@ class Healths {
 	}
 
 	applyYinChange() {
-		if (this.sashaCurHealth!=0) $(".YIN-health-bar-text").html("Yin "+this.yinCurHealth)
-		else $(".SASHA-health-bar-text").html("Yin DEAD")
+		if (this.yinCurHealth!=0) $(".YIN-health-bar-text").html("Yin "+this.yinCurHealth)
+		else $(".YIN-health-bar-text").html("Yin DEAD")
 		
 		$(".YIN-health-bar-red").animate({
 			'width': this.yinCurHealth + "%"

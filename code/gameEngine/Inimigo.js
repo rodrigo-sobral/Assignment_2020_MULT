@@ -26,7 +26,7 @@ class Inimigo extends ElementoSolto {
     //  ==========================================
     //  ENEMIES AI
     //  ==========================================
-    updateAimFollow(heroes, ctx) {
+    updateAimFollow(heroes, hardBlockArray, ctx) {
         if (heroes[ID_SASHA]==undefined && heroes[ID_YIN]==undefined) return
 
         if (heroes[ID_SASHA]!=undefined) {
@@ -42,14 +42,14 @@ class Inimigo extends ElementoSolto {
         
         if (distanceHero2==undefined || distanceHero1<distanceHero2) {
             var aimAngle = Math.atan2(distanceHero1Y,distanceHero1X) / Math.PI * 180
-            this.defineDirection(distanceHero1, aimAngle, ctx, heroes)
-        } else if (distanceHero1==undefined && distanceHero1>distanceHero2) {
+            this.defineDirection(distanceHero1, aimAngle, ctx, heroes, hardBlockArray)
+        } else if (distanceHero1==undefined && distanceHero1>distanceHero2, hardBlockArray) {
             var aimAngle = Math.atan2(distanceHero2Y,distanceHero2X) / Math.PI * 180
-            this.defineDirection(distanceHero2, aimAngle, ctx, heroes)
+            this.defineDirection(distanceHero2, aimAngle, ctx, heroes, hardBlockArray)
         }
 	}
     
-    defineDirection(distance, aimAngle, ctx, otherSprites) {
+    defineDirection(distance, aimAngle, ctx, heroes, hardBlockArray) {
         if (distance<=this.SHOOTING_RANGE) {
             if (this.TIME_COUNTER==this.BULLET_LOADING_TIME) { this.TIME_COUNTER=0; this.defineBullet() }
             else this.TIME_COUNTER++
@@ -64,9 +64,8 @@ class Inimigo extends ElementoSolto {
             else if (aimAngle>-115 && aimAngle<-65) this.keyStatus.walkUp=true
             else if (aimAngle>=-155 && aimAngle<=-115) { this.keyStatus.walkLeft=true; this.keyStatus.walkUp=true }
             else if ((aimAngle>155 && aimAngle<=180) || (aimAngle>=-180 && aimAngle<-155)) { this.keyStatus.walkLeft=true }
-            for (let sprite = 0; sprite < otherSprites.length; sprite++) {
-                if (otherSprites[sprite]!=undefined && this.detectIntersection(otherSprites[sprite])!=false) return
-            }
+            if (heroes[ID_SASHA]!=undefined && this.detectIntersection(heroes[ID_SASHA], ctx)!=false) return
+            if (heroes[ID_YIN]!=undefined && this.detectIntersection(heroes[ID_YIN], ctx)!=false) return
             this.moving(ctx.canvas.width, ctx.canvas.height)
         } else {
             if (aimAngle>-25 && aimAngle<25) this.stop("ArrowRight")
@@ -79,7 +78,7 @@ class Inimigo extends ElementoSolto {
             else if ((aimAngle>155 && aimAngle<=180) || (aimAngle<-155 && aimAngle>=-180)) { this.stop("ArrowLeft"); this.stop("ArrowUp") }
         }
     }
-    
+
     //  ==========================================
     //  CHARACTERS MOVEMENT AND INTERSECTIONS
     //  ==========================================
@@ -168,14 +167,38 @@ class Inimigo extends ElementoSolto {
         if (this.keyStatus.walkLeft==false && this.keyStatus.walkRight==false && this.keyStatus.walkUp==false && this.keyStatus.walkDown==false) this.walkingSound.pause()
     }
 
-    detectIntersection(sprite) {
+    detectIntersection(sprite, ctx) {
         if (sprite==undefined) return
         var contactPoint= this.intersectionWith(sprite)
+        let ch= ctx.canvas.height
+	    let cw= ctx.canvas.width
+        
         if (contactPoint==false) return false
-        else if (contactPoint[0]<sprite.x+sprite.width/2) this.stop("ArrowRight")
-        else if (contactPoint[0]>sprite.x+sprite.width/2) this.stop("ArrowLeft")
-        if (contactPoint[1]<sprite.y+sprite.height/2) this.stop("ArrowDown")
-        else if (contactPoint[1]>sprite.y+sprite.height/2) this.stop("ArrowUp")
+        else if (contactPoint[0]<sprite.x+sprite.width/2) {
+            this.stop("ArrowRight")
+            this.keyStatus.walkLeft=true
+            this.moving(cw, ch)
+            this.moving(cw, ch)
+            this.keyStatus.walkLeft=false
+        } else if (contactPoint[0]>sprite.x+sprite.width/2) {
+            this.stop("ArrowLeft")
+            this.keyStatus.walkRight=true
+            this.moving(cw, ch)
+            this.moving(cw, ch)
+            this.keyStatus.walkRight=false
+        } if (contactPoint[1]<sprite.y+sprite.height/2) {
+            this.stop("ArrowDown")
+            this.keyStatus.walkUp=true
+            this.moving(cw, ch)
+            this.moving(cw, ch)
+            this.keyStatus.walkUp=false
+        } else if (contactPoint[1]>sprite.y+sprite.height/2) {
+            this.stop("ArrowUp")
+            this.keyStatus.walkDown=true
+            this.moving(cw, ch)
+            this.moving(cw, ch)
+            this.keyStatus.walkDown=false
+        }
     }
     
     //  ==========================================
@@ -211,7 +234,7 @@ class Inimigo extends ElementoSolto {
         } else if (this.keyStatus.walkUp==true || this.keyStatus.stopUp==true) {
             shooted_bullet= new ElementoSolto(this.x+this.width/2, this.y-this.BULLET_HEIGHT, this.BULLET_WIDTH, this.BULLET_HEIGHT, this.BULLET_SPEED, this.searchDirection("Up"))
             shooted_bullet.keyStatus.walkUp=true
-        }
+        } else return
         for (let i = 0; i < this.activated_bullets.length; i++) {
             if (this.activated_bullets[i].x==shooted_bullet.x && this.activated_bullets[i].y==shooted_bullet.y) return
         }
