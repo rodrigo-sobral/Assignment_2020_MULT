@@ -229,7 +229,7 @@ function drawBlocks(ctx, blocks) {
 }
 
 let actualChapter=0
-let actualLevel=2
+let actualLevel=0
 function animLoop(ctx, heroes, chapters, healths, deadHeroes) {
 	var al = function() { animLoop(ctx, heroes, chapters, healths, deadHeroes) }
 	window.requestAnimationFrame(al)
