@@ -12,7 +12,7 @@ function main() {
 }
 
 function backMenu() {
-    location.replace("menu_main.html")
+    location.replace("../../index.html")
 }
 
 function playSound() {

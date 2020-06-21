@@ -22,7 +22,7 @@ function main() {
 }
 
 function backMainMenu() {
-    location.replace("menu_main.html")
+    location.replace("../../index.html")
 }
 
 function newGameMenu() {

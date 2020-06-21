@@ -12,7 +12,7 @@ function main() {
 }
 
 function muda_menu() {
-    location.replace("menu_main.html")
+    location.replace("../../index.html")
 }
 
 function playSound() {

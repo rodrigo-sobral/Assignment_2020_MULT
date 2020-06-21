@@ -26,20 +26,20 @@ function main() {
 }
 
 function menuPlay() {
-    location.replace("menu_play.html")
+    location.replace("html/menu_play.html")
 }
 
 
 function menuOptions() {
-    location.replace("menu_options.html")
+    location.replace("html/menu_options.html")
 }
 
 function menuHelp() {
-    location.replace("menu_help.html")
+    location.replace("html/menu_help.html")
 }
 
 function menuCredits() {
-    location.replace("menu_credits.html")
+    location.replace("html/menu_credits.html")
 }
 
 function menuClose() {
@@ -47,7 +47,7 @@ function menuClose() {
 }
 
 function playSound() {
-    var sound = new Audio("../../resources/sounds/buttonSwitchSound.mp3")
+    var sound = new Audio("resources/sounds/buttonSwitchSound.mp3")
     var music = JSON.parse(localStorage.getItem('sound'));
     sound.volume = music.effectsVolume
     sound.play()
@@ -60,7 +60,7 @@ function playBackgroundMusic() {
     } else {
         var backgroundMusic = JSON.parse(localStorage.getItem('sound'));
     }
-    var sound = new Audio("../../resources/sounds/menuBackgroundMusic.mp3")
+    var sound = new Audio("resources/sounds/menuBackgroundMusic.mp3")
     sound.volume = backgroundMusic.volume
     sound.loop = true
     sound.autoplay = true
