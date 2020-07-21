@@ -39,7 +39,7 @@ function main() {
 }
 
 function backMainMenu() {
-    location.replace("../../index.html")
+    location.replace("../index.html")
 }
 
 function volumeUpEffects(ev) {
